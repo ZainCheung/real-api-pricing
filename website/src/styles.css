@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-ink: #e8ece9;
+  --color-ink-muted: #8b948e;
+  --color-ink-dim: #5f6862;
+  --color-bg: #0b0f0e;
+  --color-bg-elevated: #111614;
+  --color-bg-card: #141a17;
+  --color-border: #24302a;
+  --color-border-strong: #33443b;
+  --color-accent: #2dd4bf;
+  --color-accent-soft: #14b8a6;
+  --color-accent-dim: rgba(45, 212, 191, 0.12);
+  --color-warn: #f59e0b;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(45, 212, 191, 0.08), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(139, 92, 246, 0.06), transparent 50%),
+    var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(45, 212, 191, 0.28);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 40%),
+    var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+}
+
+.card-hover:hover {
+  border-color: var(--color-border-strong);
+}
+
+.grid-fade {
+  background-image:
+    linear-gradient(rgba(45, 212, 191, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 212, 191, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.recharts-default-tooltip {
+  border-radius: 0.75rem !important;
+}
