@@ -1,1 +1,2 @@
-PLACEHOLDER
+# This file is overwritten on `npm run dev` / `npm run build` by the Vite copy-pricing-data plugin
+# from ../data/adopted.csv (identical content; see website/public/data/README.md).
