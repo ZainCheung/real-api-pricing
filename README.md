@@ -8,6 +8,8 @@ Full adopted data is shown first, followed by one Pareto chart per leaderboard. 
 
 **[All charts: English / 中文, SVG / PNG](charts/README.md)** · [English files](charts/en/) · [中文文件](charts/zh/)
 
+**[Interactive website (TanStack)](website/)** — Vite static build with EN/中文 toggle; see [website/README.md](website/README.md) for deploy.
+
 ## Data snapshot
 
 Snapshot: 2026-09-06. Each row is one **plan × actual served model**; allowances of different models under the same plan are alternatives and must not be added together.
