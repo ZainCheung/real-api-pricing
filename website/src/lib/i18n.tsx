@@ -29,6 +29,7 @@ const dict = {
     statOpenCode: 'OpenCode Go models',
     statArena: 'Code / Agent Arena scored',
     statAA: 'AA Intel / Coding scored',
+    statVendors: 'Vendors',
     overviewTitle: 'Overview charts',
     allowanceTitle: 'Monthly allowance',
     allowanceSub:
@@ -39,6 +40,10 @@ const dict = {
     paretoTitle: 'Pareto by leaderboard',
     paretoSub:
       'Score vs real price. The line is the subscription frontier; hollow markers are API baselines. Unscored models stay in the overviews above but are not invented into a board.',
+    leaderboardTitle: 'Leaderboard',
+    leaderboardSub:
+      'Score vs real $/MTok. Cheaper is to the right. Color is vendor; a line spans each model’s observed prices.',
+    mostEfficient: 'most efficient ↗',
     cheaperRight: 'Cheaper →',
     methodTitle: 'How the numbers work',
     method1Title: 'Define the unit',
@@ -59,8 +64,12 @@ const dict = {
     downloadAdopted: 'adopted.csv',
     footerLicense: 'Original software: MIT.',
     footerSources: 'Sources & attribution',
+    footerUpstream:
+      'Data and test methodology from FeiZhuLulu/real-api-pricing',
     footerNote:
       'Independent research visualization. Not affiliated with Arena, Artificial Analysis, or plan vendors.',
+    methodUpstream:
+      'Data and test methodology are from the source project FeiZhuLulu/real-api-pricing (this site is built on a fork).',
     langToggle: '中文',
     billingSub: 'Subscription',
     billingApi: 'API',
@@ -102,6 +111,7 @@ const dict = {
     statOpenCode: 'OpenCode Go 模型',
     statArena: 'Code / Agent Arena 有分',
     statAA: 'AA 智力 / 编程有分',
+    statVendors: '厂商',
     overviewTitle: '总览图',
     allowanceTitle: '月额度总览',
     allowanceSub: '订阅套餐 × 实际服务模型，按每月可用 token 排序（对数轴）。',
@@ -110,6 +120,10 @@ const dict = {
     paretoTitle: '分榜帕累托',
     paretoSub:
       '得分对真实单价。折线为订阅前沿；空心点为 API 基线。某榜缺分的模型仍保留在上方总览中，但不会编造分数塞入该榜。',
+    leaderboardTitle: '排行榜',
+    leaderboardSub:
+      '得分对真实 $/MTok。越右越便宜。颜色按厂商；横线为同一模型的观测单价区间。',
+    mostEfficient: '最划算 ↗',
     cheaperRight: '越右越便宜 →',
     methodTitle: '数字如何得出',
     method1Title: '定义单位',
@@ -127,7 +141,9 @@ const dict = {
     downloadAdopted: 'adopted.csv',
     footerLicense: '原创代码：MIT。',
     footerSources: '来源与署名',
+    footerUpstream: '数据与测试方案来自 FeiZhuLulu/real-api-pricing',
     footerNote: '独立研究可视化，与 Arena、Artificial Analysis 及各套餐厂商无隶属关系。',
+    methodUpstream: '数据与测试方案来自源项目 FeiZhuLulu/real-api-pricing（本站基于该项目的 fork 构建）。',
     langToggle: 'EN',
     billingSub: '订阅',
     billingApi: 'API',
