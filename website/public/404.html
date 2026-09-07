@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=./" />
+    <script>
+      // GitHub Pages SPA fallback: redirect into index with path preserved via query.
+      sessionStorage.redirect = location.href
+      location.replace(document.querySelector('meta').content ? './' : './')
+    </script>
+    <title>Redirecting…</title>
+  </head>
+  <body></body>
+</html>

@@ -12,6 +12,8 @@ GLM Coding Plan 现已改用智谱官方周积分和缓存/输入/输出三段�
 
 **[全部图表：中英文、SVG / PNG](charts/README.md)** · [English files](charts/en/) · [中文文件](charts/zh/)
 
+**[交互网站（TanStack）](website/)** — Vite 静态构建，支持中英文切换；部署见 [website/README.md](website/README.md)。
+
 ## 数据快照
 
 快照日期：2026-09-07。每行代表一个**套餐 × 实际服务模型**；同一套餐下不同模型的额度是替代关系，不能相加。
