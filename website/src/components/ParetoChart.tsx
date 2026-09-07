@@ -17,6 +17,7 @@ import { boardPoints, scoreKey, subscriptionFrontier, variantKey } from '../lib/
 import { vendorColor } from '../lib/vendors'
 import { boardTitle as i18nBoardTitle, scatterLabel } from '../lib/labels'
 import { ChartTooltipShell } from './ChartTooltip'
+import { MetricInfo } from './MetricInfo'
 import { UsdAxisTick } from './UsdAxisTick'
 
 type Row = {
@@ -184,9 +185,19 @@ export function ParetoChart({
         </a>
       </div>
 
+      <p className="mt-3 flex items-start gap-1 text-[12px] leading-relaxed text-ink-muted">
+        <span>{t('paretoHowToRead')}</span>
+        <MetricInfo
+          label={t('paretoWhatLabel')}
+          short={t('paretoWhatLabel')}
+          long={t('paretoWhatBody')}
+          align="end"
+        />
+      </p>
+
       <div className="mt-3 flex flex-wrap gap-4 text-[12px] text-ink-muted">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-white" /> {t('frontierLegend')}
+          <span className="h-2.5 w-2.5 rounded-full bg-ink-muted ring-2 ring-white" /> {t('frontierLegend')}
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-ink-muted/80" /> {t('subLegend')}
@@ -279,7 +290,7 @@ export function ParetoChart({
                       cy={cy}
                       r={4}
                       fill={payload?.color ?? '#737373'}
-                      fillOpacity={0.55}
+                      fillOpacity={0.9}
                     />
                     <PointLabel x={cx} y={cy} payload={payload} />
                   </g>
@@ -328,10 +339,10 @@ export function ParetoChart({
                     <circle
                       cx={cx}
                       cy={cy}
-                      r={5.5}
+                      r={6}
                       fill={payload?.color ?? '#ffffff'}
-                      stroke="#000000"
-                      strokeWidth={1.5}
+                      stroke="#ffffff"
+                      strokeWidth={2}
                     />
                     <PointLabel x={cx} y={cy} payload={payload} />
                   </g>

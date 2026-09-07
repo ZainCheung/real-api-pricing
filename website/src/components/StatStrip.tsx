@@ -1,28 +1,23 @@
 import type { SnapshotStats } from '../lib/stats'
 import { useI18n } from '../lib/i18n'
+import { formatSnapshotDate } from '../lib/format'
 
-/** Secondary compact metrics under hero (DeepSWE-style muted strip). */
+/** Single-line dataset snapshot under the hero. */
 export function StatStrip({ stats }: { stats: SnapshotStats }) {
-  const { t } = useI18n()
-
-  const items = [
-    { label: t('statOpenCode'), value: `${stats.opencodeGo} / 28` },
-    { label: t('statArena'), value: `${stats.arenaCode} / ${stats.arenaAgent}` },
-    { label: t('statAA'), value: `${stats.aaIntel} / ${stats.aaCoding}` },
-  ]
+  const { t, lang } = useI18n()
 
   return (
     <section className="border-y border-border">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-3 px-5 py-4">
-        <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-dim">
-          {t('snapshotTitle')}
-        </span>
-        {items.map((item) => (
-          <div key={item.label} className="flex items-baseline gap-2 text-[13px]">
-            <span className="text-ink-dim">{item.label}</span>
-            <span className="num font-semibold text-ink">{item.value}</span>
-          </div>
-        ))}
+      <div className="mx-auto max-w-6xl px-5 py-3 text-[13px] leading-relaxed text-ink-muted">
+        <span className="num text-ink">{stats.total}</span> {t('snapPoints')}
+        <span className="text-ink-dim"> · </span>
+        <span className="num text-ink">{stats.subscription}</span> {t('snapSubs')}
+        <span className="text-ink-dim"> · </span>
+        <span className="num text-ink">{stats.metered}</span> {t('snapApis')}
+        <span className="text-ink-dim"> · </span>
+        <span className="num text-ink">{stats.vendors}</span> {t('snapVendors')}
+        <span className="text-ink-dim"> · </span>
+        {t('snapshotUpdated')} {formatSnapshotDate(stats.generatedAt, lang)}
       </div>
     </section>
   )

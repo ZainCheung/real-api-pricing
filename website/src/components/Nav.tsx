@@ -18,8 +18,14 @@ export function Nav() {
           </span>
         </a>
         <nav className="flex items-center gap-4 text-[13px] text-ink-muted sm:gap-5">
-          <a className="hidden hover:text-ink sm:inline" href="#charts">
-            {t('navCharts')}
+          <a className="hidden hover:text-ink sm:inline" href="#compare">
+            {t('navCompare')}
+          </a>
+          <a className="hidden hover:text-ink sm:inline" href="#leaderboard">
+            {t('navLeaderboard')}
+          </a>
+          <a className="hidden hover:text-ink md:inline" href="#overview">
+            {t('navOverview')}
           </a>
           <a className="hidden hover:text-ink sm:inline" href="#method">
             {t('navMethod')}
@@ -42,15 +48,6 @@ export function Nav() {
           >
             {t('github')}
           </a>
-          <span
-            className="hidden h-4 w-4 items-center justify-center text-ink-dim sm:inline-flex"
-            title="Dark"
-            aria-hidden
-          >
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-none stroke-current" strokeWidth="1.5">
-              <path d="M21 14.3A8.5 8.5 0 1 1 9.7 3 7 7 0 0 0 21 14.3z" />
-            </svg>
-          </span>
         </nav>
       </div>
     </header>
