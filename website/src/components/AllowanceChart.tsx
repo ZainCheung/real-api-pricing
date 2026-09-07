@@ -4,38 +4,38 @@ import { useI18n } from '../lib/i18n'
 import { vendorColor } from '../lib/vendors'
 import { subscriptionPoints } from '../lib/stats'
 import { shortLabel } from '../lib/labels'
+import { applyLimit, CHART_LIMITS, chartLimitKey, logWidthPct, type ChartLimit } from '../lib/limits'
 import { Pill, PillGroup } from './Pill'
-
-const LIMITS = [25, 50, 91] as const
 
 export function AllowanceChart({ points }: { points: PricingPoint[] }) {
   const { t, lang } = useI18n()
-  const [limit, setLimit] = useState<(typeof LIMITS)[number]>(25)
+  const [limit, setLimit] = useState<ChartLimit>(15)
   const [hoverId, setHoverId] = useState<string | null>(null)
 
   const data = useMemo(() => {
-    return subscriptionPoints(points)
+    const sorted = subscriptionPoints(points)
       .slice()
       .sort((a, b) => (b.monthly_yi ?? 0) - (a.monthly_yi ?? 0))
-      .slice(0, limit)
-      .map((p) => {
-        const raw = p.monthly_yi ?? 0
-        const display = lang === 'en' ? raw / 10 : raw
-        return {
-          id: p.id,
-          label: p.label,
-          short: shortLabel(p.label, 42),
-          plan: p.plan,
-          model: p.model_display,
-          vendor: p.vendor,
-          value: raw,
-          display,
-          color: vendorColor(p.vendor),
-        }
-      })
+    return applyLimit(sorted, limit).map((p) => {
+      const raw = p.monthly_yi ?? 0
+      const display = lang === 'en' ? raw / 10 : raw
+      return {
+        id: p.id,
+        label: p.label,
+        short: shortLabel(p.label, 42),
+        plan: p.plan,
+        model: p.model_display,
+        vendor: p.vendor,
+        value: raw,
+        display,
+        color: vendorColor(p.vendor),
+      }
+    })
   }, [points, limit, lang])
 
-  const max = Math.max(...data.map((d) => d.display), 1)
+  const displayVals = data.map((d) => d.display).filter((v) => v > 0)
+  const max = Math.max(...displayVals, 1e-9)
+  const min = Math.min(...displayVals, max)
 
   const formatVal = (n: number) =>
     n.toLocaleString(undefined, { maximumFractionDigits: n >= 10 ? 1 : 3 })
@@ -48,9 +48,9 @@ export function AllowanceChart({ points }: { points: PricingPoint[] }) {
           <p className="mt-1 max-w-2xl text-[13px] text-ink-muted">{t('allowanceSub')}</p>
         </div>
         <PillGroup>
-          {LIMITS.map((n) => (
-            <Pill key={n} active={limit === n} onClick={() => setLimit(n)}>
-              {n === 91 ? t('allPoints') : `${t('showTop')} ${n}`}
+          {CHART_LIMITS.map((n) => (
+            <Pill key={String(n)} active={limit === n} onClick={() => setLimit(n)}>
+              {t(chartLimitKey(n))}
             </Pill>
           ))}
         </PillGroup>
@@ -60,14 +60,14 @@ export function AllowanceChart({ points }: { points: PricingPoint[] }) {
         <table className="bar-table min-w-[640px]">
           <thead>
             <tr>
-              <th className="w-[38%]">{lang === 'zh' ? '套餐 × 模型' : 'Model'}</th>
+              <th className="w-[38%]">{t('colPlanModel')}</th>
               <th className="w-[42%]">{t('tooltipAllowance')}</th>
-              <th className="w-[20%] !pr-0 !text-right">{lang === 'zh' ? '数值' : 'Value'}</th>
+              <th className="w-[20%] !pr-0 !text-right">{t('colValue')}</th>
             </tr>
           </thead>
           <tbody>
             {data.map((row) => {
-              const pct = Math.max(1.5, (row.display / max) * 100)
+              const pct = logWidthPct(row.display, min, max)
               const active = hoverId === row.id
               return (
                 <tr
@@ -75,7 +75,7 @@ export function AllowanceChart({ points }: { points: PricingPoint[] }) {
                   onMouseEnter={() => setHoverId(row.id)}
                   onMouseLeave={() => setHoverId(null)}
                   className={active ? 'bg-white/[0.02]' : undefined}
-                  title={`${row.label}\n${row.vendor} · ${formatVal(row.display)}`}
+                  title={`${row.label}\n${row.vendor} \u00b7 ${formatVal(row.display)}`}
                 >
                   <td>
                     <div className="flex min-w-0 items-center gap-2">
