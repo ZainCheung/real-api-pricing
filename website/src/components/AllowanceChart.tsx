@@ -75,7 +75,7 @@ export function AllowanceChart({ points }: { points: PricingPoint[] }) {
                   onMouseEnter={() => setHoverId(row.id)}
                   onMouseLeave={() => setHoverId(null)}
                   className={active ? 'bg-white/[0.02]' : undefined}
-                  title={`${row.label}\n${row.vendor} \u00b7 ${formatVal(row.display)}`}
+                  title={`${row.label}\n${row.vendor} · ${formatVal(row.display)}`}
                 >
                   <td>
                     <div className="flex min-w-0 items-center gap-2">
