@@ -36,7 +36,7 @@ function HomePage() {
       <div className="flex min-h-screen items-center justify-center px-5 text-center">
         <div>
           <p className="text-lg text-ink">{t('error')}</p>
-          <p className="mt-2 text-sm text-ink-muted">{error}</p>
+          <p className="mt-2 text-[13px] text-ink-muted">{error}</p>
         </div>
       </div>
     )
@@ -53,10 +53,10 @@ function HomePage() {
   const stats = computeStats(data)
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-bg">
       <Nav />
       <main>
-        <Hero />
+        <Hero stats={stats} />
         <StatStrip stats={stats} />
         <ChartsSection data={data} />
         <Method mix={data.mix} />
