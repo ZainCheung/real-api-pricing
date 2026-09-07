@@ -17,9 +17,11 @@ import {
   type SortKey,
 } from '../lib/compare'
 import { BOARD_KEYS, boardTitle } from '../lib/labels'
+import { ALLOWANCE_METRIC, PRICE_METRIC, boardMetric } from '../lib/metrics'
 import { formatAllowanceYi, formatScore, formatUsdPerMtok } from '../lib/format'
 import { vendorColor } from '../lib/vendors'
 import { Pill, PillGroup } from './Pill'
+import { HeaderMetric, MetricInfo, SortMetricPill } from './MetricInfo'
 import { RowDetail } from './RowDetail'
 
 function confidenceKey(value: string): DictKey | null {
@@ -102,7 +104,10 @@ function CompareRow({
       <div className="num hidden text-right text-[13px] text-ink lg:block">
         {formatAllowanceYi(point.monthly_yi, lang, true)}
       </div>
-      <div className="num hidden text-right text-[13px] text-ink lg:block">
+      <div
+        className="num hidden text-right text-[13px] text-ink lg:block"
+        title={score == null ? t('missingScoreNote') : undefined}
+      >
         {formatScore(score)}
       </div>
       <div className="hidden text-right text-[10px] font-medium uppercase tracking-[0.08em] text-ink-dim lg:block">
@@ -113,7 +118,8 @@ function CompareRow({
           <button
             type="button"
             className="rounded px-1.5 py-0.5 text-[11px] text-ink-dim hover:text-ink"
-            aria-label={expanded ? t('collapsePlans') : t('expandPlans')}
+            aria-label={t('expandPlansHint').replace('{n}', String(variantCount))}
+            title={t('expandPlansHint').replace('{n}', String(variantCount))}
             onClick={(e) => {
               e.stopPropagation()
               onToggleExpand?.()
@@ -157,7 +163,7 @@ export function CompareSection({ data }: { data: PointsPayload }) {
 
   const planRows = useMemo(() => sortPoints(filtered, sortKey), [filtered, sortKey])
   const modelGroups = useMemo(
-    () => sortGroups(groupByModel(filtered), sortKey),
+    () => sortGroups(groupByModel(filtered, sortKey), sortKey),
     [filtered, sortKey],
   )
 
@@ -219,6 +225,14 @@ export function CompareSection({ data }: { data: PointsPayload }) {
         <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-ink-muted">
           {t('compareSub')}
         </p>
+        <p className="mt-1.5 flex max-w-3xl items-center gap-1 text-[12px] text-ink-dim">
+          {t('workloadCompare')}
+          <MetricInfo
+            label={t('metricInfoLabel').replace('{metric}', t('workloadCompare'))}
+            short={t('workloadHelp')}
+            align="start"
+          />
+        </p>
       </div>
 
       <div className="mt-6">
@@ -260,16 +274,16 @@ export function CompareSection({ data }: { data: PointsPayload }) {
 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <PillGroup>
-            <Pill active={sortKey === 'price'} onClick={() => onSort('price')}>
-              {t('sortPrice')}
-            </Pill>
-            <Pill active={sortKey === 'allowance'} onClick={() => onSort('allowance')}>
-              {t('sortAllowance')}
-            </Pill>
+            <SortMetricPill active={sortKey === 'price'} metricKey="price" onClick={() => onSort('price')} />
+            <SortMetricPill
+              active={sortKey === 'allowance'}
+              metricKey="allowance"
+              onClick={() => onSort('allowance')}
+            />
             {BOARD_KEYS.map((b) => (
-              <Pill key={b} active={sortKey === b} onClick={() => onSort(b)}>
+              <SortMetricPill key={b} active={sortKey === b} metricKey={b} onClick={() => onSort(b)}>
                 {boardTitle(b, lang)}
-              </Pill>
+              </SortMetricPill>
             ))}
           </PillGroup>
         </div>
@@ -294,8 +308,14 @@ export function CompareSection({ data }: { data: PointsPayload }) {
             </select>
           </label>
           <PillGroup>
-            <span className="self-center px-1 text-[11px] uppercase tracking-[0.08em] text-ink-dim">
+            <span className="inline-flex items-center gap-0.5 self-center px-1 text-[11px] uppercase tracking-[0.08em] text-ink-dim">
               {t('filterConfidence')}
+              <MetricInfo
+                label={t('metricInfoLabel').replace('{metric}', t('filterConfidence'))}
+                short={t('confidenceHelpShort')}
+                long={t('confidenceHelpLong')}
+                align="start"
+              />
             </span>
             <Pill active={confidence === 'all'} onClick={() => setConfidence('all')}>
               {t('filterAll')}
@@ -313,15 +333,31 @@ export function CompareSection({ data }: { data: PointsPayload }) {
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="card overflow-hidden px-3 py-2 sm:px-4">
+        <div className="card overflow-visible px-3 py-2 sm:px-4">
           <div className="compare-head">
             <div>{t('colModel')}</div>
             <div>{t('colPlan')}</div>
-            <div className="text-right">{t('colPrice')}</div>
-            <div className="text-right">{t('colAllowance')}</div>
-            <div className="text-right">{boardTitle(scoreBoard, lang)}</div>
-            <div className="text-right">{t('colConfidence')}</div>
-            <div />
+            <div className="text-right">
+              <HeaderMetric def={PRICE_METRIC} />
+            </div>
+            <div className="text-right">
+              <HeaderMetric def={ALLOWANCE_METRIC} />
+            </div>
+            <div className="text-right">
+              <HeaderMetric def={boardMetric(scoreBoard)} />
+            </div>
+            <div className="text-right">
+              <span className="inline-flex items-center justify-end gap-0.5">
+                {t('colConfidence')}
+                <MetricInfo
+                  label={t('metricInfoLabel').replace('{metric}', t('filterConfidence'))}
+                  short={t('confidenceHelpShort')}
+                  long={t('confidenceHelpLong')}
+                  align="end"
+                />
+              </span>
+            </div>
+            <div className="text-right">{t('colPlans')}</div>
           </div>
           {visibleCount === 0 ? (
             <p className="px-1 py-8 text-center text-[13px] text-ink-dim">{t('noResults')}</p>
@@ -433,7 +469,10 @@ export function CompareSection({ data }: { data: PointsPayload }) {
                     {formatAllowanceYi(p.monthly_yi, lang, true)}
                   </span>
                   <span className="text-ink-dim">{t('colScore')}</span>
-                  <span className="num text-right text-ink">
+                  <span
+                    className="num text-right text-ink"
+                    title={pointScore(p, scoreBoard) == null ? t('missingScoreNote') : undefined}
+                  >
                     {formatScore(pointScore(p, scoreBoard))}
                   </span>
                   <span className="text-ink-dim">{t('colConfidence')}</span>

@@ -9,13 +9,13 @@ export const BOARD_KEYS: BoardKey[] = [
 
 export function boardTitle(board: BoardKey, lang: Lang): string {
   const zh: Record<BoardKey, string> = {
-    arena_code: 'Code Arena',
+    arena_code: 'Code Arena · WebDev',
     arena_agent_mode: 'Agent Arena',
     aa_intelligence_index: 'AA 智力榜',
     aa_coding_agent_index: 'AA 编程 Agent',
   }
   const en: Record<BoardKey, string> = {
-    arena_code: 'Code Arena',
+    arena_code: 'Code Arena · WebDev',
     arena_agent_mode: 'Agent Arena',
     aa_intelligence_index: 'AA Intelligence',
     aa_coding_agent_index: 'AA Coding Agent',

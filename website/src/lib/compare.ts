@@ -41,6 +41,32 @@ function metric(p: PricingPoint, sort: SortKey): number | null {
   return typeof s === 'number' ? s : null
 }
 
+function byPriceThenLabel(a: PricingPoint, b: PricingPoint): number {
+  return a.real_usd_per_mtok - b.real_usd_per_mtok || a.label.localeCompare(b.label)
+}
+
+/** Pick the plan that should represent a model for the active sort metric. */
+export function representativeForMetric(plans: PricingPoint[], sort: SortKey): PricingPoint {
+  if (plans.length === 1) return plans[0]
+
+  if (sort === 'allowance') {
+    const withAllowance = plans.filter((p) => p.monthly_yi != null && Number.isFinite(p.monthly_yi))
+    const pool = withAllowance.length ? withAllowance : plans
+    return [...pool].sort(
+      (a, b) =>
+        (b.monthly_yi ?? -Infinity) - (a.monthly_yi ?? -Infinity) || byPriceThenLabel(a, b),
+    )[0]
+  }
+
+  if (isBoardSort(sort)) {
+    const scored = plans.filter((p) => metric(p, sort) != null)
+    const pool = scored.length ? scored : plans
+    return [...pool].sort(byPriceThenLabel)[0]
+  }
+
+  return [...plans].sort(byPriceThenLabel)[0]
+}
+
 export function sortPoints(points: PricingPoint[], sort: SortKey): PricingPoint[] {
   const dir = sort === 'price' ? 1 : -1
   return [...points].sort((a, b) => {
@@ -62,7 +88,7 @@ export type ModelGroup = {
   plans: PricingPoint[]
 }
 
-export function groupByModel(points: PricingPoint[]): ModelGroup[] {
+export function groupByModel(points: PricingPoint[], sortKey: SortKey = 'price'): ModelGroup[] {
   const map = new Map<string, PricingPoint[]>()
   for (const p of points) {
     const list = map.get(p.model) ?? []
@@ -71,14 +97,14 @@ export function groupByModel(points: PricingPoint[]): ModelGroup[] {
   }
   const groups: ModelGroup[] = []
   for (const [model, plans] of map) {
-    const priced = [...plans].sort((a, b) => a.real_usd_per_mtok - b.real_usd_per_mtok)
-    const best = priced[0]
+    const best = representativeForMetric(plans, sortKey)
+    const ordered = sortPoints(plans, sortKey)
     groups.push({
       model,
       display: best.model_display,
       vendor: best.vendor,
       best,
-      plans: priced,
+      plans: ordered,
     })
   }
   return groups
@@ -104,4 +130,18 @@ export function uniqueVendors(points: PricingPoint[]): string[] {
 export function pointScore(p: PricingPoint, board: BoardKey): number | null {
   const s = p[scoreKey(board)]
   return typeof s === 'number' ? s : null
+}
+
+/** Subscription saving vs list blended API price. Null for API points or missing list price. */
+export function apiSavingRatio(point: PricingPoint): number | null {
+  if (point.billing === 'metered') return null
+  const list = point.list_blended_usd_per_mtok
+  if (list == null || !(list > 0) || !Number.isFinite(point.real_usd_per_mtok)) return null
+  return 1 - point.real_usd_per_mtok / list
+}
+
+export function formatApiSaving(ratio: number): string {
+  const pct = Math.round(ratio * 1000) / 10
+  if (Number.isInteger(pct)) return `${pct}%`
+  return `${pct.toFixed(1)}%`
 }

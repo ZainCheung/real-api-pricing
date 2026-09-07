@@ -8,9 +8,12 @@ import {
   formatScore,
   formatUsdPerMtok,
 } from '../lib/format'
-import { pointScore } from '../lib/compare'
+import { apiSavingRatio, formatApiSaving, pointScore } from '../lib/compare'
 import { vendorColor } from '../lib/vendors'
-import { boardTitle } from '../lib/labels'
+import { BOARD_KEYS, boardTitle } from '../lib/labels'
+import { ALLOWANCE_METRIC, PRICE_METRIC, boardMetric } from '../lib/metrics'
+import { variantKey } from '../lib/pareto'
+import { MetricHelp, MetricInfo } from './MetricInfo'
 
 function confidenceKey(value: string): DictKey | null {
   if (value === 'high') return 'confHigh'
@@ -19,11 +22,29 @@ function confidenceKey(value: string): DictKey | null {
   return null
 }
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Field({ label, children }: { label: ReactNode; children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[7.5rem_minmax(0,1fr)] gap-2 py-1.5 text-[13px]">
-      <dt className="text-ink-dim">{label}</dt>
+    <div className="grid grid-cols-[8.75rem_minmax(0,1fr)] gap-2 py-1.5 text-[13px]">
+      <dt className="flex items-start gap-0.5 text-ink-dim">{label}</dt>
       <dd className="min-w-0 break-words text-ink">{children}</dd>
+    </div>
+  )
+}
+
+function MetricLabel({ text, def }: { text: string; def: Parameters<typeof MetricHelp>[0]['def'] }) {
+  return (
+    <>
+      <span>{text}</span>
+      <MetricHelp def={def} align="start" />
+    </>
+  )
+}
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="mt-4 border-t border-border pt-3">
+      <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-dim">{title}</div>
+      <dl className="mt-1">{children}</dl>
     </div>
   )
 }
@@ -47,16 +68,38 @@ export function RowDetail({
 
   if (!point) {
     return (
-      <aside className="card h-fit p-5 text-[13px] text-ink-dim">
-        <div className="text-[11px] font-medium uppercase tracking-[0.12em]">{t('detailTitle')}</div>
-        <p className="mt-2 leading-relaxed">{t('detailHint')}</p>
+      <aside className="card h-fit p-5 text-[13px] text-ink-muted">
+        <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-dim">
+          {t('howToRead')}
+        </div>
+        <dl className="mt-3 space-y-3">
+          <div>
+            <dt className="font-medium text-ink">{t('fieldRealPrice')}</dt>
+            <dd className="mt-0.5 text-ink-dim">{t('howToReadPrice')}</dd>
+          </div>
+          <div>
+            <dt className="font-medium text-ink">{boardTitle(scoreBoard, lang)}</dt>
+            <dd className="mt-0.5 text-ink-dim">{t('howToReadScore')}</dd>
+          </div>
+          <div>
+            <dt className="font-medium text-ink">{t('fieldConfidence')}</dt>
+            <dd className="mt-0.5 text-ink-dim">{t('howToReadEvidence')}</dd>
+          </div>
+          <div>
+            <dt className="font-medium text-ink">{t('howToReadPlansTitle')}</dt>
+            <dd className="mt-0.5 text-ink-dim">{t('howToReadPlans')}</dd>
+          </div>
+        </dl>
+        <p className="mt-4 border-t border-border pt-3 leading-relaxed text-ink-dim">
+          {t('howToReadFooter')}
+        </p>
       </aside>
     )
   }
 
   const confKey = confidenceKey(point.confidence)
   const sourceUrl = extractSourceUrl(point.source)
-  const score = pointScore(point, scoreBoard)
+  const saving = apiSavingRatio(point)
   const compareDisabled = !inCompare && compareFull
 
   return (
@@ -94,8 +137,8 @@ export function RowDetail({
         {point.billing === 'metered' ? t('billingApi') : t('billingSub')}
       </div>
 
-      <dl className="mt-4 border-t border-border pt-3">
-        <Field label={t('fieldRealPrice')}>
+      <Section title={t('sectionPricing')}>
+        <Field label={<MetricLabel text={t('fieldRealPrice')} def={PRICE_METRIC} />}>
           <span className="num">
             {formatUsdPerMtok(point.real_usd_per_mtok)}
             <span className="text-ink-dim"> {t('perMtok')}</span>
@@ -104,7 +147,7 @@ export function RowDetail({
         <Field label={t('fieldMonthlyFee')}>
           <span className="num">{formatMonthlyFee(point.price_usd)}</span>
         </Field>
-        <Field label={t('fieldUsableTokens')}>
+        <Field label={<MetricLabel text={t('fieldUsableTokens')} def={ALLOWANCE_METRIC} />}>
           <span className="num">{formatAllowanceYi(point.monthly_yi, lang)}</span>
         </Field>
         {point.list_blended_usd_per_mtok != null ? (
@@ -115,16 +158,68 @@ export function RowDetail({
             </span>
           </Field>
         ) : null}
-        <Field label={boardTitle(scoreBoard, lang)}>
-          <span className="num">{formatScore(score)}</span>
-        </Field>
-        <Field label={t('fieldConfidence')}>
-          <span className="uppercase tracking-wide">{confKey ? t(confKey) : point.confidence}</span>
-        </Field>
-        <Field label={t('fieldTier')}>{point.tier || '—'}</Field>
-        <Field label={t('fieldVendor')}>{point.vendor}</Field>
-        <Field label={t('fieldBilling')}>
-          {point.billing === 'metered' ? t('billingApi') : t('billingSub')}
+        {saving != null ? (
+          <Field
+            label={
+              <>
+                <span>{t('fieldApiSaving')}</span>
+                <MetricInfo
+                  label={t('metricInfoLabel').replace('{metric}', t('fieldApiSaving'))}
+                  short={t('apiSavingQualifier')}
+                  align="start"
+                />
+              </>
+            }
+          >
+            <span className="num">
+              {t(saving >= 0 ? 'apiSavingCheaper' : 'apiSavingCostlier').replace(
+                '{pct}',
+                formatApiSaving(Math.abs(saving)),
+              )}
+            </span>
+          </Field>
+        ) : null}
+      </Section>
+
+      <Section title={t('sectionBenchmarks')}>
+        {BOARD_KEYS.map((board) => {
+          const value = pointScore(point, board)
+          const variant = point[variantKey(board)]
+          return (
+            <Field
+              key={board}
+              label={<MetricLabel text={boardTitle(board, lang)} def={boardMetric(board)} />}
+            >
+              <div>
+                <span className="num" title={value == null ? t('missingScoreNote') : undefined}>
+                  {formatScore(value)}
+                </span>
+                {value == null ? (
+                  <div className="mt-0.5 text-[12px] leading-snug text-ink-dim">{t('missingScoreNote')}</div>
+                ) : typeof variant === 'string' && variant ? (
+                  <div className="mt-0.5 text-[12px] leading-snug text-ink-dim">{variant}</div>
+                ) : null}
+              </div>
+            </Field>
+          )
+        })}
+      </Section>
+
+      <Section title={t('sectionEvidence')}>
+        <Field
+          label={
+            <>
+              <span>{t('fieldConfidence')}</span>
+              <MetricInfo
+                label={t('metricInfoLabel').replace('{metric}', t('fieldConfidence'))}
+                short={t('confidenceHelpShort')}
+                long={t('confidenceHelpLong')}
+                align="start"
+              />
+            </>
+          }
+        >
+          <span className="tracking-wide">{confKey ? t(confKey) : point.confidence}</span>
         </Field>
         <Field label={t('fieldSource')}>
           <div className="space-y-1">
@@ -148,7 +243,7 @@ export function RowDetail({
             <span className="text-[12px] leading-snug text-ink-muted">{point.note}</span>
           </Field>
         ) : null}
-      </dl>
+      </Section>
 
       <button
         type="button"
