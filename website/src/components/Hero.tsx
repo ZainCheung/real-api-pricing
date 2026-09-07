@@ -30,7 +30,7 @@ export function Hero({
                 href="#compare"
                 className="inline-flex items-center rounded-md bg-white px-4 py-2 text-[13px] font-semibold text-black hover:bg-neutral-200"
               >
-                {t('ctaCompare')} \u2192
+                {t('ctaCompare')} →
               </a>
               <a
                 href="#method"

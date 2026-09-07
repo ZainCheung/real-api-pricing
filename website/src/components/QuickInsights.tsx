@@ -22,23 +22,23 @@ export function QuickInsights({
     {
       key: 'lowest',
       label: t('insightLowest'),
-      value: lowest ? formatUsdPerMtok(lowest.real_usd_per_mtok) : '\u2014',
-      sub: lowest ? lowest.label : '\u2014',
+      value: lowest ? formatUsdPerMtok(lowest.real_usd_per_mtok) : '—',
+      sub: lowest ? lowest.label : '—',
       color: lowest ? vendorColor(lowest.vendor) : undefined,
     },
     {
       key: 'largest',
       label: t('insightLargest'),
-      value: largest ? formatAllowanceYi(largest.monthly_yi, lang) : '\u2014',
-      sub: largest ? largest.label : '\u2014',
+      value: largest ? formatAllowanceYi(largest.monthly_yi, lang) : '—',
+      sub: largest ? largest.label : '—',
       color: largest ? vendorColor(largest.vendor) : undefined,
     },
     {
       key: 'frontier',
       label: t('insightFrontier'),
-      value: frontier ? formatScore(frontierScore) : '\u2014',
+      value: frontier ? formatScore(frontierScore) : '—',
       sub: frontier
-        ? `${frontier.label} \u00b7 ${formatUsdPerMtok(frontier.real_usd_per_mtok)}`
+        ? `${frontier.label} · ${formatUsdPerMtok(frontier.real_usd_per_mtok)}`
         : t('insightFrontierHint'),
       color: frontier ? vendorColor(frontier.vendor) : undefined,
     },
