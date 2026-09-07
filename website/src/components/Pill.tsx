@@ -12,8 +12,9 @@ export function Pill({
   return (
     <button
       type="button"
-      className={`pill ${active ? 'pill-active' : ''} ${className}`}
       {...rest}
+      aria-pressed={Boolean(active)}
+      className={`pill ${active ? 'pill-active' : ''} ${className}`}
     >
       {children}
     </button>
