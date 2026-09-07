@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { BoardKey, PointsPayload } from '../types'
 import { useI18n } from '../lib/i18n'
 import { BOARD_KEYS, boardTitle } from '../lib/labels'
+import { MetricInfo } from './MetricInfo'
 import { ParetoChart } from './ParetoChart'
 import { Pill, PillGroup } from './Pill'
 
@@ -19,6 +20,15 @@ export function AdvancedPareto({ data }: { data: PointsPayload }) {
           </h2>
           <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-ink-muted">
             {t('paretoSub')}
+          </p>
+          <p className="mt-2 flex max-w-3xl items-center gap-1 text-[13px] text-ink-muted">
+            {t('paretoWhatLabel')}
+            <MetricInfo
+              label={t('paretoWhatLabel')}
+              short={t('paretoHowToRead')}
+              long={t('paretoWhatBody')}
+              align="start"
+            />
           </p>
         </div>
         <Pill
