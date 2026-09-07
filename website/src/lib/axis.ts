@@ -93,6 +93,16 @@ export function niceLinearTicks(min: number, max: number, target = 5): number[] 
   return ticks.length ? ticks : [min, max]
 }
 
+/** 0–100% position on a log domain (cheap → expensive, left → right). */
+export function logPosition(value: number, domain: [number, number]): number {
+  const [lo, hi] = domain
+  if (!(lo > 0) || !(hi > 0)) return 50
+  const span = Math.log10(hi) - Math.log10(lo)
+  if (!Number.isFinite(span) || span === 0) return 50
+  const t = (Math.log10(Math.max(value, lo)) - Math.log10(lo)) / span
+  return Math.min(100, Math.max(0, t * 100))
+}
+
 export function formatYTick(v: number): string {
   if (!Number.isFinite(v)) return ''
   const abs = Math.abs(v)
