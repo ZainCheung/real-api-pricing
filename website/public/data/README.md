@@ -1,6 +1,6 @@
 # Website data
 
-Copied automatically from repo-root `derived/` and `data/` by the Vite `copy-pricing-data` plugin on `npm run dev` / `npm run build`.
+Copied automatically from repo-root `derived/` and `data/` by `scripts/sync-data.mjs` on `npm run dev` / `npm run build`.
 
 Sources:
 - `derived/points.json`
