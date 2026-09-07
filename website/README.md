@@ -73,32 +73,34 @@ Environment: leave `VITE_BASE` unset (or `/`).
 
 ### GitHub Pages
 
-1. Build with project base path:
+Merging to `main` triggers [`.github/workflows/deploy-website.yml`](../.github/workflows/deploy-website.yml) (also runnable via **workflow_dispatch**). Enable Pages in repo settings with **Source = GitHub Actions** first.
 
-   ```bash
-   cd website
-   VITE_BASE=/real-api-pricing/ pnpm build
-   ```
+Manual build with project base path:
 
-2. Publish the contents of `website/dist` to the `gh-pages` branch, or use GitHub Actions to deploy `website/dist` to Pages.
+```bash
+cd website
+VITE_BASE=/real-api-pricing/ npm run build
+```
 
-3. Repo Settings → Pages → source = deployed branch / Actions.
-
-Example Actions sketch (set Node 20, install deps in `website/`, build with `VITE_BASE=/real-api-pricing/`, upload `website/dist` via pages artifact + deploy-pages).
+The workflow installs deps, builds with `VITE_BASE=/real-api-pricing/`, and deploys `website/dist` via the Pages artifact + `deploy-pages`.
 
 Adjust `VITE_BASE` if the repo name differs.
 
 ## Refreshing data
 
-After regenerating `derived/points.json` in the repo root:
+`predev` / `prebuild` automatically run `sync-data`, which copies:
+
+- `../derived/points.json` → `public/data/points.json`
+- `../derived/points.csv` → `public/data/points.csv`
+- `../data/adopted.csv` → `public/data/adopted.csv`
+
+After regenerating derived data in the repo root, sync explicitly if needed:
 
 ```bash
-cp ../derived/points.json public/data/points.json
-cp ../derived/points.csv public/data/points.csv
-cp ../data/adopted.csv public/data/adopted.csv
+npm run sync-data
 ```
 
-Then rebuild.
+Then `npm run build` (or just rely on `prebuild`).
 
 ## Design notes
 
@@ -106,6 +108,8 @@ Dark research-landing aesthetic inspired by modern benchmark sites (teal accent 
 
 ## package.json scripts
 
+- `sync-data` — copy derived/data CSVs into `public/data/`
+- `predev` / `prebuild` — auto-run `sync-data` before `dev` / `build`
 - `dev` — Vite dev server
 - `build` — typecheck + production static build to `dist/`
 - `preview` — serve `dist/` locally
