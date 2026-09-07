@@ -1,1 +1,1 @@
-@file:///tmp/b1/0.content
+PLACEHOLDER_LOAD_FROM_/tmp/b1/0.content
