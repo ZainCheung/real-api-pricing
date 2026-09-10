@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-05",
+  "updatedAt": "2026-09-10",
   "usdPerCny": 7.2,
   "items": [
     {
@@ -27,6 +27,29 @@
       "usdPerMTok": {
         "peak": { "cacheHit": 0.014, "inputMiss": 0.44, "output": 1.32 },
         "offPeak": { "cacheHit": 0.007, "inputMiss": 0.22, "output": 0.66 }
+      },
+      "supersededBy": "deepseek_flash",
+      "supersededNote": "2026-09-10 官方：legacy 名 deepseek-v4-flash / deepseek-v4-flash-vision-exp 仍接受，但由 V4.1 Flash 承接并按 Flash 价计费。"
+    },
+    {
+      "id": "deepseek_flash",
+      "provider": "DeepSeek",
+      "model": "deepseek-flash",
+      "snapshot": "DeepSeek-V4.1-Flash",
+      "billing": "metered_api",
+      "firstPartySubscription": false,
+      "chatApp": "免费",
+      "contextTokens": 1000000,
+      "maxOutputTokens": 384000,
+      "concurrency": 2500,
+      "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+      "enSource": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "checkedAt": "2026-09-10",
+      "peakHoursUtc": ["Mon-Fri 01:00-04:00", "Mon-Fri 06:00-10:00"],
+      "legacyAliases": ["deepseek-v4-flash", "deepseek-v4-flash-vision-exp"],
+      "usdPerMTok": {
+        "peak": { "cacheHit": 0.006, "inputMiss": 0.30, "output": 1.20 },
+        "offPeak": { "cacheHit": 0.003, "inputMiss": 0.15, "output": 0.60 }
       }
     },
     {

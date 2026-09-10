@@ -13,5 +13,5 @@ Code Arena | WebDev Overall | Arena Score | 2026-09-05
 2     Claude Max 20x (9/14+)         USD 200  Claude Opus 5      157         0.01274  medium  1688         claude-opus-5-max                   —        max       agent_configuration_reference
 3     Claude Max 5x (9/14+)          USD 100  Claude Opus 5      78.5        0.01274  medium  1688         claude-opus-5-max                   —        max       agent_configuration_reference
 4     GLM Coding Pro (v2 ¥149) 闲时  CNY 149  GLM 5.3 Flash      76.99       0.00285  high    1605         glm-5.3-flash                       —        —         agent_configuration_reference
-5     Command Code GOAT              USD 10   DeepSeek V4 Flash  43.274      0.00231  medium  1580         deepseek-v4-flash-high              —        high      agent_configuration_reference
+5     Command Code GOAT              USD 10   DeepSeek V4 Flash  72.727      0.00138  medium  1580         deepseek-v4-flash-high              —        high      agent_configuration_reference
 6     GLM Coding Pro (v2 ¥149) 闲时  CNY 149  GLM 5.3            25.4        0.00865  high    1609         glm-5.3-max                         —        max       agent_configuration_reference

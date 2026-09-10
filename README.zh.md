@@ -24,22 +24,22 @@ GLM Coding Plan 现已改用智谱官方周积分和缓存/输入/输出三段�
 
 AA 智力榜改用 **Intelligence Index v4.3**（2026-09-07 发布），AA Coding Agent 仍为 **v1.4**。智力榜按新版整榜替换，不能把跨版本分数降低解释为模型能力退步。保留选定快照内的全部配置，并明确标注 AA 估计值；历史证据继续保存在 `data/research/`。
 
-快照日期：2026-09-09。每行代表一个**套餐 × 实际服务模型**；同一套餐下不同模型的额度是替代关系，不能相加。
+快照日期：2026-09-10。每行代表一个**套餐 × 实际服务模型**；同一套餐下不同模型的额度是替代关系，不能相加。
 
 | 覆盖范围 | 行数 |
 |---|---:|
-| 全部采用的套餐 × 模型点 | 188 |
-| 有月额度的订阅点 | 177 |
+| 全部采用的套餐 × 模型点 | 201 |
+| 有月额度的订阅点 | 190 |
 | 按量 API 基准点 | 11 |
-| OpenCode Go / Command Code GOAT / Ollama 模型 | 28 / 38 / 20 |
-| Code Arena / Agent Arena 有分点 | 138 / 142 |
-| AA 智力榜 / AA 编程 Agent 榜有分点 | 169 / 73 |
+| OpenCode Go / Command Code GOAT / Ollama 模型 | 28 / 39 / 32 |
+| Code Arena / Agent Arena 有分点 | 136 / 140 |
+| AA 智力榜 / AA 编程 Agent 榜有分点 | 171 / 73 |
 
 **下载数据：** [采用值 CSV](data/adopted.csv) · [完整计算结果 CSV](derived/points.csv) · [完整计算结果 JSON](derived/points.json) · [数据说明及缺分清单](data/README.md) · [分日期原始证据](data/research/)
 
 ## 月额度总览
 
-177 个订阅套餐 × 模型点按采用数据里的美元月费拆成三档，避免 GitHub 首页一张图挤满：**$0–30（含 $30）**、**>$30 且 ≤$100**、**>$100–$300**。各档内部按月可用 token 排序。未拆档的全量图和混合比例图仍在 [图表目录](charts/README.md)。
+190 个订阅套餐 × 模型点按采用数据里的美元月费拆成三档，避免 GitHub 首页一张图挤满：**$0–30（含 $30）**、**>$30 且 ≤$100**、**>$100–$300**。各档内部按月可用 token 排序。未拆档的全量图和混合比例图仍在 [图表目录](charts/README.md)。
 
 ### $0–30
 
@@ -67,7 +67,7 @@ AA 智力榜改用 **Intelligence Index v4.3**（2026-09-07 发布），AA Codin
 
 ## 真实单价总览
 
-把全部 188 个订阅和 API 点放在同一套 $/MTok 口径下比较。
+把全部 201 个订阅和 API 点放在同一套 $/MTok 口径下比较。
 
 [English SVG](charts/en/overview/real-price-overview.svg) · [中文 SVG](charts/zh/overview/单价总览.svg) · [English PNG](charts/en/overview/real-price-overview.png) · [中文 PNG](charts/zh/overview/单价总览.png)
 
@@ -107,7 +107,7 @@ AA 编程 Agent 分数属于已测试的 harness × 模型 × effort 配置。�
 
 [全配置交互图](charts/zh/pareto/帕累托交互图.html) 默认展示全部存档配置，可切换最高分汇总。下载HTML后本地打开，Plotly需要联网。目前全部采用参考映射，尚不是已验证产品配置的严格前沿。
 
-[评测配置JSON](derived/benchmark-configurations.json) / [CSV](derived/benchmark-configurations.csv) 完整保留204条记录、原始标签、已知harness/effort、30条来源分数区间和83条来源任务成本。[套餐配置映射JSON](derived/benchmark-points.json) / [CSV](derived/benchmark-points.csv) 包含886条明确参考映射，保留低effort配置。Composer Standard/Fast只匹配本模式，缺失时留空；未知harness、effort、区间均不推测。
+[评测配置JSON](derived/benchmark-configurations.json) / [CSV](derived/benchmark-configurations.csv) 完整保留204条记录、原始标签、已知harness/effort、30条来源分数区间和83条来源任务成本。[套餐配置映射JSON](derived/benchmark-points.json) / [CSV](derived/benchmark-points.csv) 包含878条明确参考映射，保留低effort配置。Composer Standard/Fast只匹配本模式，缺失时留空；未知harness、effort、区间均不推测。
 
 来源任务成本的均值和中位数分别保留，不作为订阅内任务成本。分数区间可在交互图悬停查看，目前尚不参与前沿筛选。额度数值范围、稳健前沿和负载敏感性分析留待后续；不把定性置信度编成误差百分比。
 

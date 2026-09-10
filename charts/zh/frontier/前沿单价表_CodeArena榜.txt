@@ -10,7 +10,7 @@ Code Arena | WebDev Overall | Arena Score | 2026-09-05
 序号  套餐                           价格/月  服务模型           月额度(亿)  $/MTok   置信度  Arena Score  得分版本                            Harness  思考强度  映射
 ----  -----------------------------  -------  -----------------  ----------  -------  ------  -----------  ----------------------------------  -------  --------  -----------------------------
 1     ChatGPT Pro 20x                USD 200  GPT 5.6 Luna       1502.22     0.00133  medium  1519         gpt-5.6-luna-xhigh (codex-harness)  Codex    xhigh     agent_configuration_reference
-2     Command Code GOAT              USD 10   DeepSeek V4 Flash  43.274      0.00231  medium  1580         deepseek-v4-flash-high              —        high      agent_configuration_reference
+2     Command Code GOAT              USD 10   DeepSeek V4 Flash  72.727      0.00138  medium  1580         deepseek-v4-flash-high              —        high      agent_configuration_reference
 3     GLM Coding Pro (v2 ¥149) 闲时  CNY 149  GLM 5.3 Flash      76.99       0.00285  high    1605         glm-5.3-flash                       —        —         agent_configuration_reference
 4     GLM Coding Pro (v2 ¥149) 闲时  CNY 149  GLM 5.3            25.4        0.00865  high    1609         glm-5.3-max                         —        max       agent_configuration_reference
 5     Claude Max 20x (9/14+)         USD 200  Claude Opus 5      157         0.01274  medium  1688         claude-opus-5-max                   —        max       agent_configuration_reference

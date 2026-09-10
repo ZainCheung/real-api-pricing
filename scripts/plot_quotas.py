@@ -44,7 +44,9 @@ def fee_band_rows(rows: list[dict], band: dict) -> list[dict]:
 
 if os.path.isfile("C:/Windows/Fonts/msyh.ttc"):
     font_manager.fontManager.addfont("C:/Windows/Fonts/msyh.ttc")
-plt.rcParams["font.family"] = ["Microsoft YaHei", "Noto Sans CJK SC", "DejaVu Sans"]
+plt.rcParams["font.family"] = [
+    "Microsoft YaHei", "Noto Sans CJK SC", "Heiti SC", "PingFang SC", "Songti SC", "DejaVu Sans",
+]
 plt.rcParams["axes.unicode_minus"] = False
 
 VENDOR_OF = {

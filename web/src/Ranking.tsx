@@ -85,7 +85,7 @@ export default function Ranking({
   useEffect(() => {
     handle.current = {
       download: async (format) => {
-        // Dense rows keep a full ~188-row PNG under common canvas height limits.
+        // Dense rows keep a full ~201-row PNG under common canvas height limits.
         const width = 1100,
           rowH = sorted.length > 40 ? 54 : 86,
           height = 130 + Math.max(sorted.length, 1) * rowH;

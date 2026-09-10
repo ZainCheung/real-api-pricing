@@ -1,0 +1,48 @@
+{
+  "collectedAt": "2026-09-10",
+  "scopeNote": "GitHub issues #11–#15 官方定价快照采用记录。历史 research 文件不改；本文件只记 2026-09-10 相对上一公开快照的取舍。",
+  "issues": [11, 12, 13, 14, 15],
+  "pagesFetchedAt": "2026-09-10",
+  "sources": [
+    "https://api-docs.deepseek.com/quick_start/pricing/",
+    "https://opencode.ai/docs/go",
+    "https://opencode.ai/go",
+    "https://commandcode.ai/docs/plans/goat",
+    "https://commandcode.ai/docs/resources/pricing-limits",
+    "https://ollama.com/pricing",
+    "https://ollama.com/blog/transparent-pricing"
+  ],
+  "decisions": [
+    {
+      "issue": 11,
+      "provider": "DeepSeek",
+      "decision": "Adopt DeepSeek-V4.1-Flash as the first-party Flash API point. Official API name is deepseek-flash. Off-peak USD/1M: cache $0.003 / input $0.15 / output $0.60; peak is 2×. Legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp remain accepted but are served by V4.1 Flash and billed at the Flash price, so the previous V4 Flash API rows are replaced rather than kept as a second identical baseline. V4 Pro remains listed at the old Pro price until 2026-09-14 12:00 Beijing, when official docs say deepseek-v4-pro will also route to V4.1 Flash; do not pre-apply that routing before the stated date."
+    },
+    {
+      "issue": 12,
+      "provider": "Command Code GOAT",
+      "decision": "Keep $10/month → $70 shared credits and per-model monthly allowances. Add DeepSeek V4.1 Flash (deepseek-flash) at $60 allowance and the new Flash three-part price. Update existing DeepSeek V4 Flash (latest) token prices to cache $0.003 / input $0.15 / output $0.60 while keeping the $60 allowance. Vision Exp and V4 Flash Fast stay on the New-models table prices as published. Ignore processing fee, same as the previous GOAT adoption."
+    },
+    {
+      "issue": 13,
+      "provider": "OpenCode Go",
+      "decision": "Keep $10/month. Docs now define usage as a per-model monthly dollar limit (5h=20%, weekly=50%, monthly=100% of that model limit), not a shared $60 pool. GLM-5.3-Flash monthly limit is $60, not the previous $15. Add DeepSeek V4.1 Flash at the stable $15 monthly limit; the marketing 4× usage promo on opencode.ai/go is not adopted. Update V4 Flash and V4 Flash Vision Exp off-peak prices to the new Flash schedule. Remove omen-alpha (absent from the current model list and pricing table). MiniMax M2.5 remains in the pricing table and is kept. Do not use the obsolete $5 first-month /v2/ promo."
+    },
+    {
+      "issue": 14,
+      "provider": "Ollama Pro",
+      "decision": "Keep $20/month with $60 included usage credits and no weekly/session cap on the current transparent plan. Add catalog models that publish all three of input / cached input / output. Skip mistral-large-3, nemotron-3-nano, and qwen3.5:397b because cached input is unpublished. Ollama still lists deepseek-v4-flash at the old $0.22/$0.007/$0.66 schedule; do not copy DeepSeek's first-party V4.1 Flash price onto Ollama."
+    },
+    {
+      "issue": 15,
+      "provider": "Ollama Max",
+      "decision": "Same catalog and token prices as Pro, with $100/month subscription and $300 included credits. Shared-pool-per-model conversion is unchanged."
+    }
+  ],
+  "quotes": {
+    "deepseekFlashAlias": "Use deepseek-flash as the model name. The legacy names deepseek-v4-flash and deepseek-v4-flash-vision-exp are still accepted, but the corresponding models have been retired, their requests are served by the DeepSeek-V4.1-Flash model and billed at the Flash price.",
+    "deepseekProRetirement": "From 12:00 Beijing Time on September 14, 2026, and until V4.1 Pro is released in the future, requests to deepseek-v4-pro will all be routed to V4.1 Flash and billed at the V4.1 Flash price.",
+    "opencodePerModelLimits": "Each model has the following usage limits: 5-hour — 20% of the monthly limit; weekly — 50%; and monthly — 100%.",
+    "opencodePromoNotAdopted": "DeepSeek V4.1 Flash gets 4× usage limits for a limited time"
+  }
+}
