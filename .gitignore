@@ -12,6 +12,8 @@ node_modules/
 !.env.example
 .DS_Store
 Thumbs.db
+website/dist/
+website/node_modules/
 
 # Private local screenshots.
 /数据快记/
