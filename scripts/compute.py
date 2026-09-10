@@ -36,8 +36,11 @@ DISPLAY = {
     "minimax-m3": "MiniMax M3", "minimax-m2.7": "MiniMax M2.7", "minimax-m2.5": "MiniMax M2.5",
     "qwen3.8-max": "Qwen3.8 Max", "qwen3.8-flash": "Qwen3.8 Flash", "qwen3.7-max": "Qwen3.7 Max",
     "qwen3.7-plus": "Qwen3.7 Plus", "qwen3.6-plus": "Qwen3.6 Plus",
-    "deepseek-v4-flash": "DeepSeek V4 Flash", "deepseek-v4-flash-fast": "DeepSeek V4 Flash Fast", "deepseek-v4-pro": "DeepSeek V4 Pro",
+    "deepseek-flash": "DeepSeek V4.1 Flash", "deepseek-v4-flash": "DeepSeek V4 Flash",
+    "deepseek-v4-flash-fast": "DeepSeek V4 Flash Fast", "deepseek-v4-pro": "DeepSeek V4 Pro",
     "deepseek-v4-flash-vision-exp": "DeepSeek V4 Flash Vision Exp",
+    "gpt-oss:120b": "GPT-OSS 120B", "gpt-oss:20b": "GPT-OSS 20B", "gemma4": "Gemma 4",
+    "nemotron-3-super": "Nemotron 3 Super",
     "gemini-3.1-pro": "Gemini 3.1 Pro", "gemini-3.7-flash": "Gemini 3.7 Flash", "gemini-3.8-flash": "Gemini 3.8 Flash",
     "mimo-v2.5": "MiMo V2.5", "mimo-v2.5-pro": "MiMo V2.5 Pro", "longcat-2.0": "LongCat 2.0",
     "muse-spark-1.3": "Muse Spark 1.3", "muse-spark-1.3-contributor": "Muse Spark 1.3 Contributor",
@@ -52,6 +55,7 @@ VENDOR = {
     "gpt": "OpenAI", "claude": "Anthropic", "grok": "xAI", "kimi": "Kimi", "glm": "Zhipu", "minimax": "MiniMax",
     "qwen": "Alibaba", "deepseek": "DeepSeek", "gemini": "Google", "mimo": "Xiaomi", "hy": "Tencent", "composer": "Cursor",
     "longcat": "Meituan", "muse": "Muse", "omen": "OpenCode", "step": "StepFun",
+    "gemma": "Google", "nemotron": "NVIDIA",
 }
 
 
@@ -120,15 +124,17 @@ def main() -> None:
     for name, records in (("benchmark-configurations", scores), ("benchmark-points", configuration_points)):
         with (OUT / (name + ".csv")).open("w", encoding="utf-8-sig", newline="") as f:
             fields = [k for k in records[0] if k != "raw_record"]
-            writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
+            writer = csv.DictWriter(
+                f, fieldnames=fields, extrasaction="ignore", lineterminator="\n"
+            )
             writer.writeheader()
             writer.writerows(records)
     with (OUT / "points.csv").open("w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(points[0].keys()))
+        w = csv.DictWriter(f, fieldnames=list(points[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(points)
     (OUT / "points.json").write_text(json.dumps(dict(
-        generatedAt="2026-09-09", mix={k: round(v, 4) for k, v in STANDARD_MIX.items() if isinstance(v, (int, float))},
+        generatedAt="2026-09-10", mix={k: round(v, 4) for k, v in STANDARD_MIX.items() if isinstance(v, (int, float))},
         boards={b: dict(name=boards_meta[b]["name"].replace("🏆 ", ""), metric=boards_meta[b]["metric"], url=boards_meta[b]["url"], snapshot=boards_meta[b]["snapshotDate"]) for b in BOARDS},
         points=points,
     ), ensure_ascii=False, indent=1), encoding="utf-8")

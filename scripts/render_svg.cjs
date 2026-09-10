@@ -7,7 +7,8 @@ const charts = JSON.parse(fs.readFileSync(path.join(out, 'SVG坐标核对.json')
 async function main() {
   for (const {stem} of charts) {
     await sharp(path.join(out, stem + '.svg'), {density: 144})
-      .png().toFile(path.join(out, stem + '.png'));
+      .png({compressionLevel: 9, adaptiveFiltering: false, effort: 7})
+      .toFile(path.join(out, stem + '.png'));
     console.log(stem + '.png');
   }
 }

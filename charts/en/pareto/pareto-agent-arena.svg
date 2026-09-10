@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="940" viewBox="0 0 1440 940" role="img" aria-labelledby="title desc">
 <title id="title">Agent Arena · Overall (Ranking / Pareto) · Pareto frontier · Full</title>
 <desc id="desc">Real unit price uses a logarithmic scale and gets cheaper to the right. Higher scores are better. Subscriptions and metered APIs both participate in the Pareto frontier.</desc>
-<style>text{font-family:"Microsoft YaHei","Segoe UI",sans-serif} .serif{font-family:"Times New Roman",serif} .number{font-family:"Segoe UI",sans-serif;font-variant-numeric:tabular-nums} .label-name{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round} .point:hover{opacity:1}</style>
+<style>text{font-family:"Noto Sans CJK SC",sans-serif} .serif{font-family:"Noto Sans CJK SC",sans-serif} .number{font-family:"Noto Sans CJK SC",sans-serif;font-variant-numeric:tabular-nums} .label-name{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round} .point:hover{opacity:1}</style>
 <rect width="1440" height="940" fill="#FAF9F6"/>
 <text x="56.000" y="32.000" font-size="10" fill="#90968D" text-anchor="start" font-weight="400" letter-spacing="2.1">REAL API PRICING</text>
 <text x="54.000" y="85.000" font-size="36" fill="#343A33" text-anchor="start" font-weight="300" letter-spacing=".8">Real price × benchmark reference</text>
@@ -52,7 +52,7 @@
 <text x="66.000" y="469.000" font-size="12" fill="#697169" text-anchor="middle" font-weight="400" transform="rotate(-90 66 469.0)">Net Improvement %</text>
 <text x="720.000" y="775.000" font-size="13" fill="#5D655E" text-anchor="middle" font-weight="400" >Real price · USD per million tokens</text>
 <text x="1338.000" y="775.000" font-size="12" fill="#737B74" text-anchor="end" font-weight="400" >Cheaper →</text>
-<path id="frontier" d="M120.000,279.628 L923.717,279.628 L925.567,344.278 L1068.603,368.736 L1157.672,418.510 L1190.494,435.388 L1276.748,445.400 L1338.000,445.400" fill="none" stroke="#303630" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="frontier" d="M120.000,279.628 L923.717,279.628 L925.567,344.278 L1068.603,368.736 L1157.672,418.510 L1270.982,435.388 L1276.748,445.400 L1338.000,445.400" fill="none" stroke="#303630" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.03247" data-score="9.49" data-x="777.545" data-y="340.416" transform="translate(777.545 340.416)"><title>GPT 5.6 Sol · Plus / GPT 5.6 Sol · Pro 5x · $0.03247/MTok · 9.49 · mediumGPT 5.6 Sol (xHigh) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel. / GPT 5.6 Sol (xHigh) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#00A86B" opacity=".68"/>
 </g>
@@ -255,7 +255,7 @@
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.01867" data-score="2.15" data-x="864.007" data-y="445.400" transform="translate(864.007 445.400)"><title>GPT 5.6 Luna · OpenCode Go · $0.01867/MTok · 2.15 · mediumGPT 5.6 Luna (xHigh) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#00C0A8" opacity=".68"/>
 </g>
-<g class="point" data-billing="subscription" data-frontier="false" data-price="0.02282" data-score="4.03" data-x="832.647" data-y="418.510" transform="translate(832.647 418.510)"><title>GLM 5.3 Flash · OpenCode Go · $0.02282/MTok · 4.03 · mediumGLM 5.3 Flash · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
+<g class="point" data-billing="subscription" data-frontier="false" data-price="0.0057" data-score="4.03" data-x="1049.376" data-y="418.510" transform="translate(1049.376 418.510)"><title>GLM 5.3 Flash · OpenCode Go · $0.0057/MTok · 4.03 · mediumGLM 5.3 Flash · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#00C0A8" opacity=".68"/>
 </g>
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.1992" data-score="3.74" data-x="494.129" data-y="422.658" transform="translate(494.129 422.658)"><title>GLM 5.3 · OpenCode Go · $0.1992/MTok · 3.74 · mediumGLM 5.3 (Max) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
@@ -282,7 +282,7 @@
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.02838" data-score="5.91" data-x="798.579" data-y="391.621" transform="translate(798.579 391.621)"><title>DeepSeek V4 Pro · OpenCode Go · $0.02838/MTok · 5.91 · mediumDeepSeek V4 Pro (High) (0813) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#00C0A8" opacity=".68"/>
 </g>
-<g class="point" data-billing="subscription" data-frontier="false" data-price="0.00462" data-score="2.85" data-x="1082.197" data-y="435.388" transform="translate(1082.197 435.388)"><title>DeepSeek V4 Flash · OpenCode Go / DeepSeek V4 Flash · Ollama Pro / DeepSeek V4 Flash · Ollama Max · $0.00462/MTok · 2.85 · mediumDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel. / Deepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel. / Deepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
+<g class="point" data-billing="subscription" data-frontier="false" data-price="0.00275" data-score="2.85" data-x="1163.253" data-y="435.388" transform="translate(1163.253 435.388)"><title>DeepSeek V4 Flash · OpenCode Go · $0.00275/MTok · 2.85 · mediumDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#00C0A8" opacity=".68"/>
 </g>
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.02254" data-score="5.97" data-x="834.576" data-y="390.762" transform="translate(834.576 390.762)"><title>Hy4 Preview · OpenCode Go · $0.02254/MTok · 5.97 · mediumHy4 preview · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
@@ -297,7 +297,7 @@
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.0056" data-score="-1.51" data-x="1052.141" data-y="497.749" transform="translate(1052.141 497.749)"><title>Hy3 · Command Code GOAT · $0.0056/MTok · -1.51 · mediumHy3 · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#708090" opacity=".68"/>
 </g>
-<g class="point" data-billing="subscription" data-frontier="true" data-price="0.00231" data-score="2.85" data-x="1190.494" data-y="435.388" transform="translate(1190.494 435.388)"><title>DeepSeek V4 Flash · Command Code GOAT · $0.00231/MTok · 2.85 · mediumDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
+<g class="point" data-billing="subscription" data-frontier="true" data-price="0.00138" data-score="2.85" data-x="1270.982" data-y="435.388" transform="translate(1270.982 435.388)"><title>DeepSeek V4 Flash · Command Code GOAT · $0.00138/MTok · 2.85 · mediumDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-11" y="-11" width="22" height="22" rx="6" fill="#FFF" stroke="#708090" stroke-width="1.35"/>
 <circle r="4" fill="#708090"/>
 </g>
@@ -336,6 +336,9 @@
 </g>
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.05118" data-score="0.84" data-x="706.451" data-y="464.137" transform="translate(706.451 464.137)"><title>Gemini 3.7 Flash · Command Code GOAT · $0.05118/MTok · 0.84 · mediumGemini 3.7 Flash (High) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#708090" opacity=".68"/>
+</g>
+<g class="point" data-billing="subscription" data-frontier="false" data-price="0.00462" data-score="2.85" data-x="1082.197" data-y="435.388" transform="translate(1082.197 435.388)"><title>DeepSeek V4 Flash · Ollama Pro / DeepSeek V4 Flash · Ollama Max · $0.00462/MTok · 2.85 · mediumDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel. / Deepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
+<rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#A0785C" opacity=".68"/>
 </g>
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.01419" data-score="5.91" data-x="906.876" data-y="391.621" transform="translate(906.876 391.621)"><title>DeepSeek V4 Pro · Ollama Pro / DeepSeek V4 Pro · Ollama Max · $0.01419/MTok · 5.91 · mediumDeepSeek V4 Pro (High) (0813) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel. / DeepSeek V4 Pro (High) (0813) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#A0785C" opacity=".68"/>
@@ -410,12 +413,6 @@
 <g class="point" data-billing="subscription" data-frontier="false" data-price="0.01294" data-score="-10.6" data-x="921.283" data-y="627.764" transform="translate(921.283 627.764)"><title>MiniMax M2.7 · MiniMax Token Plan Plus (Global) · $0.01294/MTok · -10.6 · mediumMinimax M2.7 · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="#D23A7D" opacity=".68"/>
 </g>
-<g class="point" data-billing="metered" data-frontier="false" data-price="0.01386" data-score="2.85" data-x="910.552" data-y="435.388" transform="translate(910.552 435.388)"><title>DeepSeek V4 Flash · DeepSeek V4 Flash API off-peak · $0.01386/MTok · 2.85 · highDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
-<path d="M0 -5.5L5.5 0 0 5.5 -5.5 0Z" fill="white" stroke="#1F75FE" stroke-width="1.5" opacity=".68"/>
-</g>
-<g class="point" data-billing="metered" data-frontier="false" data-price="0.02773" data-score="2.85" data-x="802.199" data-y="435.388" transform="translate(802.199 435.388)"><title>DeepSeek V4 Flash · DeepSeek V4 Flash API peak · $0.02773/MTok · 2.85 · highDeepseek V4 Flash (High) (20260731) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
-<path d="M0 -5.5L5.5 0 0 5.5 -5.5 0Z" fill="white" stroke="#1F75FE" stroke-width="1.5" opacity=".68"/>
-</g>
 <g class="point" data-billing="metered" data-frontier="false" data-price="0.04257" data-score="5.91" data-x="735.230" data-y="391.621" transform="translate(735.230 391.621)"><title>DeepSeek V4 Pro · DeepSeek V4 Pro API off-peak · $0.04257/MTok · 5.91 · highDeepSeek V4 Pro (High) (0813) · Exact served-model reference only; product harness and quota-measurement effort are unverified. Not a benchmark measurement of this subscription or API channel.</title>
 <path d="M0 -5.5L5.5 0 0 5.5 -5.5 0Z" fill="white" stroke="#1F75FE" stroke-width="1.5" opacity=".68"/>
 </g>
@@ -468,10 +465,10 @@
 <text x="1180.672" y="418.510" font-size="14" fill="#566150" text-anchor="start" font-weight="400" class="number">$0.00285</text>
 </g>
 <g class="front-label" data-model="deepseek-v4-flash">
-<path d="M1183.785,448.804Q1183.785,471.388 1172.494,471.388" stroke="#C4CDC3" stroke-width=".8" fill="none"/>
-<text x="1166.494" y="484.388" font-size="16" fill="#343C34" text-anchor="end" font-weight="400" class="label-name">DeepSeek V4 Flash · high</text>
-<text x="1166.494" y="504.388" font-size="11.5" fill="#8B9487" text-anchor="end" font-weight="400" >Command Code GOAT</text>
-<text x="1166.494" y="524.388" font-size="14" fill="#566150" text-anchor="end" font-weight="400" class="number">$0.00231</text>
+<path d="M1264.274,448.804Q1264.274,471.388 1252.982,471.388" stroke="#C4CDC3" stroke-width=".8" fill="none"/>
+<text x="1246.982" y="484.388" font-size="16" fill="#343C34" text-anchor="end" font-weight="400" class="label-name">DeepSeek V4 Flash · high</text>
+<text x="1246.982" y="504.388" font-size="11.5" fill="#8B9487" text-anchor="end" font-weight="400" >Command Code GOAT</text>
+<text x="1246.982" y="524.388" font-size="14" fill="#566150" text-anchor="end" font-weight="400" class="number">$0.00138</text>
 </g>
 <g class="front-label" data-model="gpt-5.6-luna">
 <path d="M1280.386,459.952Q1280.386,489.400 1287.748,489.400" stroke="#C4CDC3" stroke-width=".8" fill="none"/>
@@ -508,7 +505,7 @@
 <path d="M1312 825l5 5-5 5-5-5Z" fill="none" stroke="#8B958D" stroke-width="1.2"/>
 <text x="1326.000" y="834.000" font-size="12" fill="#687168" text-anchor="start" font-weight="400" >Metered API</text>
 <text x="56.000" y="874.000" font-size="12" fill="#727B72" text-anchor="start" font-weight="400" >Default month = 4 weeks; Kimi pool = 5× weekly · Dollar/credit: 97.5% cache / 2.15% input / 0.35% output · Direct totals unchanged</text>
-<text x="1384.000" y="874.000" font-size="12" fill="#727B72" text-anchor="end" font-weight="400" >117 subscription positions / 11 API positions / 6 frontier positions</text>
+<text x="1384.000" y="874.000" font-size="12" fill="#727B72" text-anchor="end" font-weight="400" >118 subscription positions / 9 API positions / 6 frontier positions</text>
 <text x="56.000" y="898.000" font-size="11" fill="#929A90" text-anchor="start" font-weight="400" >Claude Max: permanent allowance estimate from Sep 14; Pro: historical Opus 4.8 measurement. Y uses the top archived variant per model.</text>
 <text x="56.000" y="919.000" font-size="11" fill="#929A90" text-anchor="start" font-weight="400" >Subscriptions and metered APIs share one frontier; line segments are visual guides, not purchasable plans.</text>
 <text x="1384.000" y="919.000" font-size="11" fill="#929A90" text-anchor="end" font-weight="400" >arena.ai/leaderboard/agent</text>

@@ -17,6 +17,7 @@ export const VENDOR_COLORS: Record<string, string> = {
   Tencent: '#26C6DA',
   Meituan: '#FFD100',
   Muse: '#A78BFA',
+  NVIDIA: '#76B900',
 }
 
 export function vendorColor(vendor: string): string {

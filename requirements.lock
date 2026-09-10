@@ -1,0 +1,14 @@
+# Generated for the canonical Python 3.13.5 Linux chart environment.
+# Keep versions exact; update this file only when deliberately changing the
+# renderer and then rerun the reproducibility self-test.
+contourpy==1.3.2
+cycler==0.12.1
+fonttools==4.64.0
+kiwisolver==1.5.1
+matplotlib==3.11.1
+numpy==2.2.6
+packaging==26.3
+pillow==12.2.0
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+six==1.17.0

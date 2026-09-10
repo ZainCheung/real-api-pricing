@@ -91,7 +91,7 @@ Current presentation (2026-09-08): GLM ¥49/149/469 is v2; ¥118/538/1078 is v3.
 
 ### AA snapshot update (2026-09-09)
 
-The Intelligence Index uses v4.3 and Coding Agent Index uses v1.4, captured on September 9. Each board uses one complete current snapshot, retaining its configurations without mixing older index versions. AA estimates are explicitly marked in details, the table and CSV. The data adapter verifies 188 adopted points, 204 configurations and 886 mappings.
+The Intelligence Index uses v4.3 and Coding Agent Index uses v1.4, captured on September 9. Each board uses one complete current snapshot, retaining its configurations without mixing older index versions. AA estimates are explicitly marked in details, the table and CSV. The data adapter verifies 201 adopted points, 204 configurations and 878 mappings.
 
 The site payload omits mapping fields that exactly match their referenced configuration. `unpackData` restores them before use; a deep-equality test checks every restored mapping against the original derived data. Complete source downloads remain available. This saves about 289 KB in the static upload without dropping data.
 

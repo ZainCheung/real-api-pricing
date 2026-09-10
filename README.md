@@ -18,28 +18,34 @@ Each chart uses scores from its named leaderboard only. Code Arena here specific
 
 **[All charts: English / 中文, SVG / PNG](charts/README.md)** · [English files](charts/en/) · [中文文件](charts/zh/)
 
+Charts are generated artifacts. For a data update, run the canonical
+`Publish canonical charts` GitHub Actions workflow on the branch, then wait for
+the `github-actions[bot]` chart commit; local generation is preview/testing
+only. See [BUILD.md](BUILD.md) for the pinned renderer and reproducibility
+checks.
+
 **[Interactive website (TanStack)](website/)** — Vite static build with EN/中文 toggle; see [website/README.md](website/README.md) for deploy.
 
 ## Data snapshot
 
 AA Intelligence now uses **Intelligence Index v4.3** (announced September 7, 2026); AA Coding Agent remains **v1.4**. The new intelligence methodology replaces the old snapshot as a whole: lower numerical scores are not evidence of model regression across index versions. All configurations within the selected snapshot are retained, including explicitly marked AA estimates. Historical evidence stays in `data/research/`.
 
-Snapshot: 2026-09-09. Each row is one **plan × actual served model**; allowances of different models under the same plan are alternatives and must not be added together.
+Snapshot: 2026-09-10. Each row is one **plan × actual served model**; allowances of different models under the same plan are alternatives and must not be added together.
 
 | Coverage | Rows |
 |---|---:|
-| All adopted plan × model points | 188 |
-| Subscription points with monthly allowance | 177 |
+| All adopted plan × model points | 201 |
+| Subscription points with monthly allowance | 190 |
 | Metered API baselines | 11 |
-| OpenCode Go / Command Code GOAT / Ollama models | 28 / 38 / 20 |
-| Code Arena / Agent Arena scored points | 138 / 142 |
-| AA Intelligence / AA Coding Agent scored points | 169 / 73 |
+| OpenCode Go / Command Code GOAT / Ollama models | 28 / 39 / 32 |
+| Code Arena / Agent Arena scored points | 136 / 140 |
+| AA Intelligence / AA Coding Agent scored points | 171 / 73 |
 
 **Download the data:** [adopted values (CSV)](data/adopted.csv) · [computed points (CSV)](derived/points.csv) · [computed points (JSON)](derived/points.json) · [data notes and score coverage](data/README.md) · [dated evidence](data/research/)
 
 ## Monthly allowance overview
 
-The 177 subscription plan × model points are split by adopted USD monthly fee so GitHub can show them without packing every bar into one chart: **$0–30 inclusive**, **>$30 and ≤$100**, **>$100–$300**. Each band ranks monthly usable tokens independently. The undivided chart and hybrid-scale view stay in the [chart index](charts/README.md).
+The 190 subscription plan × model points are split by adopted USD monthly fee so GitHub can show them without packing every bar into one chart: **$0–30 inclusive**, **>$30 and ≤$100**, **>$100–$300**. Each band ranks monthly usable tokens independently. The undivided chart and hybrid-scale view stay in the [chart index](charts/README.md).
 
 ### $0–30
 
@@ -67,7 +73,7 @@ The 177 subscription plan × model points are split by adopted USD monthly fee s
 
 ## Real unit price overview
 
-All 188 subscription and API points on one comparable $/MTok scale.
+All 201 subscription and API points on one comparable $/MTok scale.
 
 [English SVG](charts/en/overview/real-price-overview.svg) · [中文 SVG](charts/zh/overview/单价总览.svg) · [English PNG](charts/en/overview/real-price-overview.png) · [中文 PNG](charts/zh/overview/单价总览.png)
 
@@ -107,7 +113,7 @@ AA Coding Agent scores describe tested harness × model × effort configurations
 
 [All-configuration interactive view (Chinese)](charts/zh/pareto/帕累托交互图.html) defaults to every archived configuration and offers the highest-score summary as an option. Download the HTML and open it locally with network access for Plotly. All configurations currently use reference mappings, not a verified product-configuration frontier.
 
-The [configuration archive (JSON)](derived/benchmark-configurations.json) / [CSV](derived/benchmark-configurations.csv) retains all 204 records, original labels, known harness/effort, 30 source score intervals, and 83 source task-cost records. The [plan-to-configuration mappings (JSON)](derived/benchmark-points.json) / [CSV](derived/benchmark-points.csv) contains 886 explicit references, including lower-effort variants. Composer Standard/Fast require their own mode; a missing mode stays unscored. Unknown harnesses, efforts and intervals stay null.
+The [configuration archive (JSON)](derived/benchmark-configurations.json) / [CSV](derived/benchmark-configurations.csv) retains all 204 records, original labels, known harness/effort, 30 source score intervals, and 83 source task-cost records. The [plan-to-configuration mappings (JSON)](derived/benchmark-points.json) / [CSV](derived/benchmark-points.csv) contains 878 explicit references, including lower-effort variants. Composer Standard/Fast require their own mode; a missing mode stays unscored. Unknown harnesses, efforts and intervals stay null.
 
 Source mean and median task costs are separate fields, not subscription task costs. Score intervals are preserved and available in interactive hover details, but uncertainty does not yet change frontier membership. Numerical quota ranges, robust-frontier analysis and workload sensitivity remain follow-up work; qualitative confidence labels are not numerical error bars.
 

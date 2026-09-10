@@ -7,6 +7,8 @@ import math
 from html import escape
 from pathlib import Path
 
+from chart_environment import svg_style
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "_build"
 BOARDS = {
@@ -161,7 +163,7 @@ def draw(board, meta, points, tier, language="zh"):
     s = [f'<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="940" viewBox="0 0 1440 940" role="img" aria-labelledby="title desc">',
          f'<title id="title">{escape(meta["name"])} · {"Pareto frontier" if language == "en" else "帕累托前沿"} · {scope}</title>',
          '<desc id="desc">Real unit price uses a logarithmic scale and gets cheaper to the right. Higher scores are better. Subscriptions and metered APIs both participate in the Pareto frontier.</desc>' if language == "en" else '<desc id="desc">价格为对数轴，越右越便宜；分数越高越好。订阅和按量API共同参与帕累托前沿。</desc>',
-         '<style>text{font-family:"Microsoft YaHei","Segoe UI",sans-serif} .serif{font-family:"Times New Roman",serif} .number{font-family:"Segoe UI",sans-serif;font-variant-numeric:tabular-nums} .label-name{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round} .point:hover{opacity:1}</style>',
+         f'<style>{svg_style()}</style>',
          '<rect width="1440" height="940" fill="#FAF9F6"/>',
          text(56, 32, "REAL API PRICING", 10, "#90968D", extra='letter-spacing="2.1"'),
          text(54, 85, headline, 36, "#343A33", weight=300, extra='letter-spacing=".8"'),

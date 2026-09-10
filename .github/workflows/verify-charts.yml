@@ -1,0 +1,64 @@
+name: Verify charts
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+# Verification must never be able to write a branch or repository.
+permissions:
+  contents: read
+
+env:
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+  LC_ALL: C.UTF-8
+  MPLBACKEND: Agg
+
+jobs:
+  charts:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Install locked Python renderer
+        run: python -m pip install --requirement requirements.lock
+
+      - name: Download and install canonical font
+        run: |
+          python scripts/setup_canonical_font.py \
+            --font-dir "$RUNNER_TEMP/real-api-pricing-font" \
+            --install-dir "$HOME/.local/share/fonts"
+          fc-cache -f "$HOME/.local/share/fonts"
+          test "$(fc-match -f '%{family}\n' 'Noto Sans CJK SC' | head -1)" = 'Noto Sans CJK SC'
+          test "$(fc-match -f '%{file}\n' 'Noto Sans CJK SC' | head -1)" = "$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf"
+          echo "REAL_API_PRICING_FONT_PATH=$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf" >> "$GITHUB_ENV"
+          echo "REAL_API_PRICING_CANONICAL=1" >> "$GITHUB_ENV"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.5"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked Sharp renderer
+        run: npm ci
+
+      - name: Check canonical charts are current
+        run: python scripts/generate_publication.py --check
+
+      - name: Check canonical build reproducibility
+        run: python scripts/checks/verify_reproducibility.py
+
+      - name: Test website
+        run: |
+          npm ci --prefix website
+          npm test --prefix website

@@ -64,13 +64,14 @@ def kimi_k27_199_monthly_yi() -> float:
     )
 
 
-# OpenCode Go 官方给的是共享美元池、每模型月 Usage 和三段价格；按项目统一标准负载折 token。
+# OpenCode Go：每模型月 Usage 美元上限 × 三段价格；按项目统一标准负载折 token。
+# 2026-09-10 文档改为按模型月额度（5h=20%、周=50%、月=100%），不再写共享 $60 池。
 # 元组：(model, per-model Usage USD, cached read, input, output, 采用价档说明)
-# 证据全量快照：data/research/opencode-go-round5-2026-09-06.json（官网价格/Endpoints 共 28 个模型）。
+# 证据：data/research/opencode-go-round5-2026-09-06.json；pricing-issues-round9-2026-09-10.json。
 OPENCODE_GO_MODELS = (
     ("grok-4.6", 15, 0.5, 2.0, 6.0, "≤200K 标价；>200K 价翻倍，保留在 research variants"),
     ("gpt-5.6-luna", 15, 0.02, 0.2, 1.2, "≤272K 标价；>272K 档保留在 research variants"),
-    ("glm-5.3-flash", 15, 0.03, 0.15, 0.5, "官网单档"),
+    ("glm-5.3-flash", 60, 0.03, 0.15, 0.5, "官网单档；2026-09-10 月额度 $15→$60"),
     ("glm-5.3", 15, 0.26, 1.4, 4.4, "官网单档"),
     ("glm-5.2", 60, 0.26, 1.4, 4.4, "官网单档"),
     ("glm-5.1", 60, 0.26, 1.4, 4.4, "官网单档"),
@@ -90,33 +91,34 @@ OPENCODE_GO_MODELS = (
     ("qwen3.7-max", 30, 0.5, 2.5, 7.5, "官网单档"),
     ("qwen3.7-plus", 60, 0.04, 0.4, 1.6, "≤256K 标价；>256K 档保留在 research variants"),
     ("qwen3.6-plus", 60, 0.05, 0.5, 3.0, "≤256K 标价；>256K 档保留在 research variants"),
+    ("deepseek-flash", 15, 0.003, 0.15, 0.60, "V4.1 Flash Off-Peak；Peak 额度为其一半。落地页 4× 限时额度不采用，用稳定文档 $15"),
     ("deepseek-v4-pro", 15, 0.022, 0.66, 1.98, "Off-Peak；Peak 额度为其一半，保留在 research variants"),
-    ("deepseek-v4-flash", 30, 0.007, 0.22, 0.66, "Off-Peak；Peak 额度为其一半，保留在 research variants"),
-    ("deepseek-v4-flash-vision-exp", 15, 0.007, 0.22, 0.66, "Off-Peak；图像另折 input token，不另编图像负载标准"),
+    ("deepseek-v4-flash", 30, 0.003, 0.15, 0.60, "Off-Peak 已与 V4.1 Flash 同价；Peak 额度为其一半；月额度仍为 $30"),
+    ("deepseek-v4-flash-vision-exp", 15, 0.003, 0.15, 0.60, "Off-Peak 已与 V4.1 Flash 同价；图像另折 input token，不另编图像负载标准"),
     ("hy4-preview", 30, 0.042, 0.834, 2.501, "官网单档"),
     ("hy3", 60, 0.035, 0.14, 0.58, "官网单档"),
-    ("omen-alpha", 100, 0.04, 0.2, 0.66, "模型 Usage $100，但共享月池 $60 先绑定"),
 )
 
 OPENCODE_GO_OLD_YI = {
-    "grok-4.6": 0.279, "gpt-5.6-luna": 5.25, "glm-5.3-flash": 4.44, "glm-5.3": 0.571,
+    "grok-4.6": 0.279, "gpt-5.6-luna": 5.25, "glm-5.3-flash": 4.383, "glm-5.3": 0.571,
     "kimi-k3": 0.381, "kimi-k2.7-code": 3.785, "minimax-m3": 9.072, "qwen3.7-plus": 12.461,
-    "deepseek-v4-pro": 4.318, "deepseek-v4-flash": 27.224, "hy4-preview": 4.917, "mimo-v2.5-pro": 14.196,
+    "deepseek-v4-pro": 4.318, "deepseek-v4-flash": 21.637, "deepseek-v4-flash-vision-exp": 10.819,
+    "hy4-preview": 4.917, "mimo-v2.5-pro": 14.196,
 }
 
 
 def opencode_go_rows() -> list[tuple]:
     rows = []
     for model, usage, cached, inp, out, variant_note in OPENCODE_GO_MODELS:
-        effective_usage = min(60, usage)
-        yi = round(effective_usage / blended(cached, inp, out) / 100, 3)
+        yi = round(usage / blended(cached, inp, out) / 100, 3)
         old = OPENCODE_GO_OLD_YI.get(model)
-        change = f"旧{old:g}亿（请求估算）→{yi:g}亿" if old is not None else f"新增{yi:g}亿"
+        change = f"旧{old:g}亿→{yi:g}亿" if old is not None else f"新增{yi:g}亿"
         rows.append((
             "opencode_go", "OpenCode Go", 10, "USD", model, yi, "medium",
-            "https://opencode.ai/docs/go/ 官方每模型 Usage 与三段价格；opencode-go-round5-2026-09-06.json",
-            f"{change}：min(共享月池$60, 模型Usage ${usage:g}) ÷ 统一标准负载加权价；{variant_note}。"
-            "官方请求数仅作交叉检查，不再作为额度主值；同套餐各模型额度不可相加",
+            "https://opencode.ai/docs/go/ 官方每模型月额度与三段价格；opencode-go-round5-2026-09-06.json；"
+            "pricing-issues-round9-2026-09-10.json",
+            f"{change}：模型月额度 ${usage:g} ÷ 统一标准负载加权价；{variant_note}。"
+            "2026-09-10 文档按模型月额度计，不再套共享$60池；官方请求数仅作交叉检查；同套餐各模型额度不可相加",
         ))
     return rows
 
@@ -132,7 +134,8 @@ COMMAND_CODE_GOAT_MODELS = (
     ("glm-5.2", 70, 0.26, 1.4, 4.4, "官网三段价"),
     ("hy3", 70, 0.035, 0.14, 0.58, "官网三段价"),
     ("qwen3.8-27b", 70, 0.04, 0.4, 3.0, "官网三段价"),
-    ("deepseek-v4-flash", 60, 0.007, 0.22, 0.66, "Off-Peak；Peak≈2×（01–04 & 06–10 UTC weekdays），与OpenCode口径一致"),
+    ("deepseek-v4-flash", 60, 0.003, 0.15, 0.60, "V4 Flash (latest) Off-Peak 已与 V4.1 Flash 同价；Peak≈2×（01–04 & 06–10 UTC weekdays）"),
+    ("deepseek-flash", 60, 0.003, 0.15, 0.60, "V4.1 Flash Off-Peak；Peak≈2×；GOAT 表月额度 $60"),
     ("kimi-k2.7-code", 60, 0.19, 0.95, 4.0, "官网三段价"),
     ("minimax-m3", 47, 0.06, 0.3, 1.2, "官网页成交/折扣三段价（-50%类）"),
     ("glm-5.3-flash", 40, 0.03, 0.15, 0.5, "官网三段价"),
@@ -178,7 +181,8 @@ def command_code_goat_rows() -> list[tuple]:
         rows.append((
             "command_code_goat", "Command Code GOAT", 10, "USD", model, yi, "medium",
             "https://commandcode.ai/docs/plans/goat 官方每模型 allowance 与三段价；"
-            "https://commandcode.ai/pricing；$10→$70 credits；code-subscriptions-round1-2026-09-06.json",
+            "https://commandcode.ai/pricing；$10→$70 credits；code-subscriptions-round1-2026-09-06.json；"
+            "pricing-issues-round9-2026-09-10.json",
             f"新增{yi:g}亿：min(共享月池$70, 模型allowance ${allowance:g}) ÷ 统一标准负载加权价；{variant_note}。"
             "忽略 processing fee；同套餐各模型额度不可相加；无面板 token+% 截图，按官方绝对credits+价表",
         ))
@@ -187,20 +191,27 @@ def command_code_goat_rows() -> list[tuple]:
 
 # Ollama Cloud Pro/Max：官方月度 usage credits × 公开 $/1M；无每模型 cap，共享池打满单模型。
 # 元组：(model, cached, input, output, 采用价档说明)
-# 证据：data/research/code-subscriptions-round1-2026-09-06.json（ollama.com/pricing 当前有明确 input/cache/output 的模型）。
+# 证据：data/research/code-subscriptions-round1-2026-09-06.json；pricing-issues-round9-2026-09-10.json。
+# 只收官网同时给出 input / cached input / output 的模型；缺缓存价的行不编标准负载。
 OLLAMA_PRO_CREDITS_USD = 60
 OLLAMA_MAX_CREDITS_USD = 300
 OLLAMA_MODELS = (
-    ("deepseek-v4-flash", 0.007, 0.22, 0.66, "Off-Peak；Peak=2×（12:00–18:00 UTC Mon–Fri），与项目/OpenCode DeepSeek 峰谷口径一致"),
+    ("deepseek-v4-flash", 0.007, 0.22, 0.66, "Off-Peak；Peak=2×（12:00–18:00 UTC Mon–Fri）；Ollama 价表仍为旧 Flash 档，不套原厂 V4.1 价"),
     ("deepseek-v4-pro", 0.022, 0.66, 1.98, "Off-Peak；Peak=2×（12:00–18:00 UTC Mon–Fri），与项目/OpenCode DeepSeek 峰谷口径一致"),
     ("glm-5.3", 0.26, 1.4, 4.4, "官网三段价"),
     ("glm-5.3-flash", 0.03, 0.15, 0.5, "官网三段价"),
     ("glm-5.2", 0.26, 1.4, 4.4, "官网三段价"),
     ("glm-5.1", 0.2, 1.0, 3.2, "官网三段价"),
+    ("gpt-oss:120b", 0.014, 0.15, 0.60, "官网三段价"),
+    ("gpt-oss:20b", 0.035, 0.07, 0.30, "官网三段价"),
+    ("gemma4", 0.05, 0.14, 0.40, "官网三段价"),
     ("kimi-k3", 0.3, 3.0, 15.0, "官网三段价"),
     ("kimi-k2.7-code", 0.19, 0.95, 4.0, "官网三段价"),
+    ("kimi-k2.6", 0.16, 0.95, 4.0, "官网三段价"),
     ("minimax-m3", 0.12, 0.6, 2.4, "官网三段价（Ollama 标价约为 OpenCode/Command 常见成交价 2×，用本渠道价表）"),
     ("minimax-m2.7", 0.06, 0.3, 1.2, "官网三段价"),
+    ("nemotron-3-super", 0.015, 0.015, 0.60, "官网三段价"),
+    ("nemotron-3-ultra", 0.10, 0.10, 3.00, "官网三段价"),
 )
 
 
@@ -211,7 +222,8 @@ def ollama_rows(plan_id: str, plan_name: str, price_usd: float, credits_usd: flo
         rows.append((
             plan_id, plan_name, price_usd, "USD", model, yi, "medium",
             "https://ollama.com/pricing 官方 usage credits 与三段价；"
-            "https://ollama.com/blog/transparent-pricing；code-subscriptions-round1-2026-09-06.json",
+            "https://ollama.com/blog/transparent-pricing；code-subscriptions-round1-2026-09-06.json；"
+            "pricing-issues-round9-2026-09-10.json",
             f"新增{yi:g}亿：共享月池 ${credits_usd:g} ÷ 统一标准负载加权价；{variant_note}。"
             "同套餐各模型额度不可相加（共享池按单模型打满）；无面板 token+% 截图，按官方绝对credits+价表",
         ))
@@ -335,10 +347,10 @@ DERIVED = [
 
 # ---- 按量 API 基线：(id, name, model, cached, input, output) USD/MTok；用项目统一标准负载折成混合价
 METERED = [
-    ("deepseek_v4_flash_offpeak", "DeepSeek V4 Flash API 闲时", "deepseek-v4-flash", 0.007, 0.22, 0.66, "api-docs.deepseek.com"),
-    ("deepseek_v4_flash_peak", "DeepSeek V4 Flash API 忙时", "deepseek-v4-flash", 0.014, 0.44, 1.32, "api-docs.deepseek.com"),
-    ("deepseek_v4_pro_offpeak", "DeepSeek V4 Pro API 闲时", "deepseek-v4-pro", 0.022, 0.66, 1.98, "api-docs.deepseek.com"),
-    ("deepseek_v4_pro_peak", "DeepSeek V4 Pro API 忙时", "deepseek-v4-pro", 0.044, 1.32, 3.96, "api-docs.deepseek.com"),
+    ("deepseek_flash_offpeak", "DeepSeek V4.1 Flash API 闲时", "deepseek-flash", 0.003, 0.15, 0.60, "api-docs.deepseek.com 2026-09-10；legacy v4-flash 别名已按 Flash 价计"),
+    ("deepseek_flash_peak", "DeepSeek V4.1 Flash API 忙时", "deepseek-flash", 0.006, 0.30, 1.20, "api-docs.deepseek.com 2026-09-10；peak=2× off-peak"),
+    ("deepseek_v4_pro_offpeak", "DeepSeek V4 Pro API 闲时", "deepseek-v4-pro", 0.022, 0.66, 1.98, "api-docs.deepseek.com；2026-09-14 12:00 北京时间起将路由到 V4.1 Flash，本快照仍用 Pro 价"),
+    ("deepseek_v4_pro_peak", "DeepSeek V4 Pro API 忙时", "deepseek-v4-pro", 0.044, 1.32, 3.96, "api-docs.deepseek.com；2026-09-14 起将路由到 V4.1 Flash，本快照仍用 Pro 价"),
     ("openai_sol_api", "GPT-5.6 Sol API", "gpt-5.6-sol", 0.4, 4.0, 20.0, "developers.openai.com"),
     ("xai_grok46_api", "Grok 4.6 API (<200k)", "grok-4.6", 0.5, 2.0, 6.0, "docs.x.ai"),
     # 2026-09-06 补齐 Claude 与 GPT-5.6 其余档的官方按量价，让 Claude / ChatGPT 订阅点在同榜有 API 基线可比
@@ -411,7 +423,7 @@ def main() -> None:
                          decision_note=f"标价 cached {cached}/in {inp}/out {out} × 项目统一标准负载 {STANDARD_MIX['cache']:.1%}/{STANDARD_MIX['input']:.2%}/{STANDARD_MIX['output']:.2%}"))
 
     with OUT.open("w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS)
+        w = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     print(f"{len(rows)} rows -> {OUT}")
