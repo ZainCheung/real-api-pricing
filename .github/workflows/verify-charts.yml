@@ -39,7 +39,7 @@ jobs:
           fc-cache -f "$HOME/.local/share/fonts"
           test "$(fc-match -f '%{family}\n' 'Noto Sans CJK SC' | head -1)" = 'Noto Sans CJK SC'
           test "$(fc-match -f '%{file}\n' 'Noto Sans CJK SC' | head -1)" = "$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf"
-          echo "REAL_API_PRICING_FONT_PATH=$RUNNER_TEMP/real-api-pricing-font/NotoSansCJKsc-Regular.otf" >> "$GITHUB_ENV"
+          echo "REAL_API_PRICING_FONT_PATH=$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf" >> "$GITHUB_ENV"
           echo "REAL_API_PRICING_CANONICAL=1" >> "$GITHUB_ENV"
 
       - name: Setup Node

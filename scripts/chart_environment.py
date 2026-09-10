@@ -112,12 +112,10 @@ def configure_matplotlib(*, required: bool | None = None) -> Path | None:
         resolved = Path(
             font_manager.findfont(CANONICAL_FONT_NAME, fallback_to_default=False)
         ).resolve()
-        # Fontconfig may already have the same verified file registered under
-        # its install directory (for example ``~/.local/share/fonts`` in CI),
-        # while ``addfont`` registers the workspace copy above.  The path is
-        # therefore allowed to differ as long as the selected bytes are still
-        # the pinned canonical font.  Rejecting a different checksum keeps a
-        # same-family system font from silently changing glyph metrics.
+        if resolved != path:
+            raise RuntimeError(
+                f"Canonical font resolution mismatch: expected {path}, got {resolved}"
+            )
         resolved_hash = sha256(resolved)
         if resolved_hash != CANONICAL_FONT_SHA256:
             raise RuntimeError(

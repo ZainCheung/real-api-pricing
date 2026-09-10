@@ -166,7 +166,10 @@ def ensure_canonical_font(root: Path, env: dict[str, str]) -> None:
     # canonical runs; CI installs this directory in its setup step.
     if shutil.which("fc-cache"):
         run(["fc-cache", "-f", str(install_dir)], root, env)
-    env["REAL_API_PRICING_FONT_PATH"] = str(font_dir / FONT_FILENAME)
+    # Point Matplotlib at the same fontconfig path that librsvg/Sharp uses.
+    # This makes the resolved path check strict even when a workspace copy
+    # and an installed copy are both present.
+    env["REAL_API_PRICING_FONT_PATH"] = str(install_dir / FONT_FILENAME)
 
 
 def run_pipeline(root: Path, *, canonical: bool, preserve_legacy: bool = True) -> None:

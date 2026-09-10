@@ -8,7 +8,7 @@ its CDN.
 The canonical entry point is:
 
 ```sh
-python -m pip install -r requirements.txt
+python -m pip install -r requirements.lock
 npm ci
 python scripts/generate_publication.py
 ```

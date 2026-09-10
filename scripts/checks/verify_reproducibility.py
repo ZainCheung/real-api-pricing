@@ -11,4 +11,3 @@ result = subprocess.run(
     cwd=ROOT,
 )
 raise SystemExit(result.returncode)
-

@@ -124,11 +124,13 @@ def main() -> None:
     for name, records in (("benchmark-configurations", scores), ("benchmark-points", configuration_points)):
         with (OUT / (name + ".csv")).open("w", encoding="utf-8-sig", newline="") as f:
             fields = [k for k in records[0] if k != "raw_record"]
-            writer = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
+            writer = csv.DictWriter(
+                f, fieldnames=fields, extrasaction="ignore", lineterminator="\n"
+            )
             writer.writeheader()
             writer.writerows(records)
     with (OUT / "points.csv").open("w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(points[0].keys()))
+        w = csv.DictWriter(f, fieldnames=list(points[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(points)
     (OUT / "points.json").write_text(json.dumps(dict(
