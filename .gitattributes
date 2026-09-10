@@ -1,0 +1,4 @@
+# Matplotlib emits significant-looking line padding in its generated path
+# records. SVGs are validated byte-for-byte; do not rewrite them just to make
+# a text diff prettier.
+*.svg -whitespace

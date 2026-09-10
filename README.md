@@ -18,6 +18,12 @@ Each chart uses scores from its named leaderboard only. Code Arena here specific
 
 **[All charts: English / 中文, SVG / PNG](charts/README.md)** · [English files](charts/en/) · [中文文件](charts/zh/)
 
+Charts are generated artifacts. For a data update, run the canonical
+`Publish canonical charts` GitHub Actions workflow on the branch, then wait for
+the `github-actions[bot]` chart commit; local generation is preview/testing
+only. See [BUILD.md](BUILD.md) for the pinned renderer and reproducibility
+checks.
+
 **[Interactive website (TanStack)](website/)** — Vite static build with EN/中文 toggle; see [website/README.md](website/README.md) for deploy.
 
 ## Data snapshot

@@ -1,9 +1,45 @@
 # Reproducing the charts
 
-Use Python 3.10+ and Node.js 20+. Install dependencies with `python -m pip install -r requirements.txt` and `npm install`.
-For Chinese chart text, install Microsoft YaHei or Noto Sans CJK SC. Font substitution can change the layout on other systems. Interactive HTML loads Plotly from its CDN.
+Charts are generated artifacts. Local generation is for preview/testing; the
+canonical `charts/**` publication is performed by GitHub Actions in the pinned
+Python/Matplotlib/Sharp environment. Interactive HTML still loads Plotly from
+its CDN.
 
-Run from the repository root, in order:
+The canonical entry point is:
+
+```sh
+python -m pip install -r requirements.txt
+npm ci
+python scripts/generate_publication.py
+```
+
+The entry point runs the existing data, calculation, plotting, rendering,
+publication and verification scripts in a fixed order. It downloads the
+immutable Noto Sans CJK SC revision listed in `scripts/chart_environment.py`,
+checks its SHA-256, fixes Matplotlib's SVG hash salt, and disables volatile SVG
+dates. Use `python scripts/generate_publication.py --preview` for a local-only
+font fallback. `npm ci` (not `npm install`) is required for the locked Sharp
+PNG renderer.
+
+Before opening a PR, run the non-mutating checks:
+
+```sh
+python scripts/generate_publication.py --check
+python scripts/checks/verify_reproducibility.py
+```
+
+`--check` builds in a temporary copy and reports stale tracked canonical
+artifacts without overwriting the checkout. The reproducibility check performs
+two independent canonical builds and compares every SVG, PNG and TXT SHA-256.
+
+Run `python scripts/setup_canonical_font.py --install-dir ~/.local/share/fonts`
+and `fc-cache -f` when you want Sharp's local PNG preview to use the same font.
+The small `config/chart-baseline.json` exception records historical charts that
+were rendered with Microsoft YaHei; it keeps PR #21 from mixing a one-time
+historical font migration into a data update. Remove that exception in a
+separate baseline-normalization change.
+
+For debugging individual stages, the underlying commands remain available:
 
 ```sh
 python scripts/build_adopted.py
@@ -17,6 +53,8 @@ python scripts/plot_quotas.py
 python scripts/publish_charts.py
 python scripts/checks/verify_svg.py
 python scripts/checks/verify_four_boards.py
+python scripts/checks/verify_aa_snapshot.py
+python scripts/checks/verify_fee_bands.py
 python scripts/checks/verify_publication.py
 ```
 

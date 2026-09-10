@@ -11,13 +11,14 @@ import json
 import math
 import os
 import unicodedata
+from pathlib import Path
 
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib import font_manager
 
+from chart_environment import SAVE_METADATA, configure_matplotlib, strip_svg_line_padding
 from compute import DISPLAY
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,12 +43,7 @@ def fee_band_rows(rows: list[dict], band: dict) -> list[dict]:
             result.append(row)
     return result
 
-if os.path.isfile("C:/Windows/Fonts/msyh.ttc"):
-    font_manager.fontManager.addfont("C:/Windows/Fonts/msyh.ttc")
-plt.rcParams["font.family"] = [
-    "Microsoft YaHei", "Noto Sans CJK SC", "Heiti SC", "PingFang SC", "Songti SC", "DejaVu Sans",
-]
-plt.rcParams["axes.unicode_minus"] = False
+configure_matplotlib()
 
 VENDOR_OF = {
     "chatgpt": "OpenAI",
@@ -439,7 +435,10 @@ def plot(rows: list[dict], view: str, language: str, board: dict | None = None,
         draw_mixed_vs_third(fig, axes, mixed, baseline, view, language)
     stem = output_stem(view, board, language, fee_band=fee_band) + ("_混合比例" if mixed_scale else "")
     for ext in ("png", "svg"):
-        fig.savefig(os.path.join(OUT_DIR, f"{stem}.{ext}"), dpi=160)
+        destination = os.path.join(OUT_DIR, f"{stem}.{ext}")
+        fig.savefig(destination, dpi=160, metadata=SAVE_METADATA)
+        if ext == "svg":
+            strip_svg_line_padding(Path(destination))
     plt.close(fig)
     print(f"wrote {len(rows)} rows -> {stem}.png/.svg")
 

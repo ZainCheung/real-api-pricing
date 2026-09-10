@@ -1,0 +1,87 @@
+name: Publish canonical charts
+
+on:
+  workflow_dispatch:
+
+# This is the only workflow that can publish generated chart artifacts.
+permissions:
+  contents: write
+
+env:
+  PYTHONHASHSEED: "0"
+  TZ: UTC
+  LC_ALL: C.UTF-8
+  MPLBACKEND: Agg
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Install locked Python renderer
+        run: python -m pip install --requirement requirements.lock
+
+      - name: Download and install canonical font
+        run: |
+          python scripts/setup_canonical_font.py \
+            --font-dir "$RUNNER_TEMP/real-api-pricing-font" \
+            --install-dir "$HOME/.local/share/fonts"
+          fc-cache -f "$HOME/.local/share/fonts"
+          test "$(fc-match -f '%{family}\n' 'Noto Sans CJK SC' | head -1)" = 'Noto Sans CJK SC'
+          test "$(fc-match -f '%{file}\n' 'Noto Sans CJK SC' | head -1)" = "$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf"
+          echo "REAL_API_PRICING_FONT_PATH=$RUNNER_TEMP/real-api-pricing-font/NotoSansCJKsc-Regular.otf" >> "$GITHUB_ENV"
+          echo "REAL_API_PRICING_CANONICAL=1" >> "$GITHUB_ENV"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.5"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install locked Sharp renderer
+        run: npm ci
+
+      - name: Generate and validate canonical artifacts
+        run: python scripts/generate_publication.py --publisher
+
+      - name: Prove canonical artifacts are reproducible
+        run: python scripts/checks/verify_reproducibility.py
+
+      - name: Refuse unreviewed generated changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r path; do
+            case "$path" in
+              charts/*) ;;
+              "") ;;
+              *) echo "Publisher changed a non-chart path: $path" >&2; exit 1 ;;
+            esac
+          done < <(git diff --name-only)
+          git diff --check
+
+      - name: Commit and push canonical charts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- charts/README.md charts/en charts/zh
+          if git diff --cached --quiet; then
+            echo "No chart changes to publish"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'chore(charts): regenerate canonical artifacts'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

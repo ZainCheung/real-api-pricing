@@ -1,1 +1,3 @@
-matplotlib>=3.8,<4
+# Canonical chart renderer.  Keep this exact; the transitive lock is in
+# requirements.lock and is what CI installs.
+matplotlib==3.11.1

@@ -15,9 +15,16 @@ BOARDS = {
 }
 
 
-def exports():
-    yield BUILD / '帕累托交互图.html', CHARTS / 'zh' / 'pareto' / '帕累托交互图.html'
-    for source in sorted(BUILD.iterdir()):
+def exports(root: Path = ROOT):
+    """Yield ``(build source, published destination)`` pairs.
+
+    ``root`` is injectable for the isolated ``generate_publication.py --check``
+    and reproducibility runs; the normal command keeps the historical default.
+    """
+    build = root / '_build'
+    charts = root / 'charts'
+    yield build / '帕累托交互图.html', charts / 'zh' / 'pareto' / '帕累托交互图.html'
+    for source in sorted(build.iterdir()):
         if source.suffix not in ('.svg', '.png', '.txt'):
             continue
         stem = source.stem
@@ -48,12 +55,12 @@ def exports():
             name = base if language == 'zh' else f'frontier-{"allowance" if "额度" in prefix else "price"}-{slug}' + ('-table' if '表' in prefix else '')
         else:
             continue
-        yield source, CHARTS / language / category / (name + source.suffix)
+        yield source, charts / language / category / (name + source.suffix)
 
 
 def main():
     exported = []
-    for source, destination in exports():
+    for source, destination in exports(ROOT):
         destination.parent.mkdir(parents=True, exist_ok=True)
         if '--fee-bands-only' not in sys.argv or '_月费' in source.stem:
             shutil.copyfile(source, destination)

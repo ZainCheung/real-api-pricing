@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "baselineCommit": "06bae66",
+  "reason": "Historical charts on main were rendered with Microsoft YaHei. Keep these bytes unchanged in PR #21; remove this exception in a separate one-time canonical baseline migration.",
+  "paths": {
+    "charts/en/frontier/frontier-allowance-aa-coding-agent.svg": "b6b3c0aa3085511f7c78e06c1b07be974cc9be6aa826553197af224437eb2956",
+    "charts/en/frontier/frontier-allowance-aa-coding-agent.png": "673108ff2b413ebcc41c1febba5859792b525afacfaaf3806232692c64515f7f",
+    "charts/en/frontier/frontier-allowance-aa-intelligence.svg": "10fb88ad0baecbcb3beb40c099f749bb0bb5e85bbda6ec0ec4d1394f84b9ad72",
+    "charts/en/frontier/frontier-allowance-aa-intelligence.png": "8e83d88271f78a1bf2ab2ab4ff739790617ef98f64c8fbe88c7635dbe9d5d9f6",
+    "charts/en/frontier/frontier-price-aa-coding-agent.svg": "a6e3fd5fc8c012d701d4c784d5a778ea53ef7de64567bc91aa9588bd374d7b5e",
+    "charts/en/frontier/frontier-price-aa-coding-agent.png": "8e3f4e3597079ba5255586f53179f6b2c9a3fac33f3c5794c63c3990f491a9a7",
+    "charts/en/frontier/frontier-price-aa-intelligence.svg": "3348bb4af841fc712541ff4dbc17e9aea8e2602e885edde919bf89186093dedb",
+    "charts/en/frontier/frontier-price-aa-intelligence.png": "670441c06c75deb408d0758c562fc435c75fe36339671d3a286b936a49972ea3",
+    "charts/zh/frontier/前沿额度_AA编程Agent榜.svg": "72b0445703a0df6adb15d227a170fa58dd241bc1409a27ae0833b409097e9e18",
+    "charts/zh/frontier/前沿额度_AA编程Agent榜.png": "18578d65c38cc67fef37d62c08b249bd5e28edd9f63a1b73ec2111b06b5534d9",
+    "charts/zh/frontier/前沿额度_AA智力榜.svg": "3d4f7f23f8ab65fda99291974bff98df4bbff1ebbaca1df651b1a84bac4fa6dd",
+    "charts/zh/frontier/前沿额度_AA智力榜.png": "b86e2cc0be010be24883647f83bff8930f1fa44c3490532e651ac54a3d0b1450",
+    "charts/zh/frontier/前沿单价_AA编程Agent榜.svg": "fa0101edb5f153d839fd1acc63e2b138dd8f0a7a1ffa74579c380e69a195a6c2",
+    "charts/zh/frontier/前沿单价_AA编程Agent榜.png": "ac36769f753396fc6eafe0ef77fba2cb72e9229cae549512cf8eab657e4071fd",
+    "charts/zh/frontier/前沿单价_AA智力榜.svg": "54e678615a2a2b206afc3f5c2ce877022c5e336a4081bd01e17404d8a8d440d1",
+    "charts/zh/frontier/前沿单价_AA智力榜.png": "44b0d019efe9abcc2a41e4b1103158f7253afc925c3dbb947913cbcc8a23befa",
+    "charts/en/overview/monthly-allowance-overview-fee-100-300-usd.svg": "708ad4f2c3ae269c011a52b07e978086b6202075c78372348b40cecbc1319b3f",
+    "charts/en/overview/monthly-allowance-overview-fee-100-300-usd.png": "e701fb564d17e05e3e63b50b78a5766d2840e51c087950ceaa72cd27e20e89f4",
+    "charts/zh/overview/额度总览_月费100-300美元.svg": "2b5578e3a610a304c293d9ce039c0ba67bf48f8c45300e2550dbde763a889780",
+    "charts/zh/overview/额度总览_月费100-300美元.png": "f1fdf92c159d2ee7bb1c7f6ba502bac594e620795ec67ae9455b250d870fae65"
+  }
+}

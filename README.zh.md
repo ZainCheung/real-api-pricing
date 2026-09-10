@@ -18,6 +18,10 @@ GLM Coding Plan 现已改用智谱官方周积分和缓存/输入/输出三段�
 
 **[全部图表：中英文、SVG / PNG](charts/README.md)** · [English files](charts/en/) · [中文文件](charts/zh/)
 
+图表属于生成物。更新数据后，请在分支上运行 GitHub Actions 的
+`Publish canonical charts` 工作流，等待 `github-actions[bot]` 提交图表；本地生成仅用于预览和测试。详见
+[BUILD.md](BUILD.md) 中的固定渲染器与可复现性检查说明。
+
 **[交互网站（TanStack）](website/)** — Vite 静态构建，支持中英文切换；部署见 [website/README.md](website/README.md)。
 
 ## 数据快照

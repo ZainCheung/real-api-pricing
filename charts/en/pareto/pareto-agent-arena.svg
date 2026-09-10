@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="940" viewBox="0 0 1440 940" role="img" aria-labelledby="title desc">
 <title id="title">Agent Arena · Overall (Ranking / Pareto) · Pareto frontier · Full</title>
 <desc id="desc">Real unit price uses a logarithmic scale and gets cheaper to the right. Higher scores are better. Subscriptions and metered APIs both participate in the Pareto frontier.</desc>
-<style>text{font-family:"Microsoft YaHei","Heiti SC","PingFang SC","Noto Sans CJK SC","Segoe UI",sans-serif} .serif{font-family:"Times New Roman",serif} .number{font-family:"Segoe UI",sans-serif;font-variant-numeric:tabular-nums} .label-name{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round} .point:hover{opacity:1}</style>
+<style>text{font-family:"Noto Sans CJK SC",sans-serif} .serif{font-family:"Noto Sans CJK SC",sans-serif} .number{font-family:"Noto Sans CJK SC",sans-serif;font-variant-numeric:tabular-nums} .label-name{paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round} .point:hover{opacity:1}</style>
 <rect width="1440" height="940" fill="#FAF9F6"/>
 <text x="56.000" y="32.000" font-size="10" fill="#90968D" text-anchor="start" font-weight="400" letter-spacing="2.1">REAL API PRICING</text>
 <text x="54.000" y="85.000" font-size="36" fill="#343A33" text-anchor="start" font-weight="300" letter-spacing=".8">Real price × benchmark reference</text>
