@@ -2,7 +2,7 @@
 """生成 data/adopted.csv：每个 (套餐, 实际服务模型) 一行，一个采用值。
 
 所有取舍在这里写死并注明理由；原始多源数据留在 data/subscription-quotas*.json 不动。
-真实单价 = 月费(USD) / 月 token（全口径：输入+缓存读+缓存写+输出一视同仁，月=4周，饱和使用）。
+真实单价 = 月费(USD) / 月 token（全口径：输入+缓存读+缓存写+输出一视同仁；默认月=4周，厂商独立月池除外；饱和使用）。
 """
 from __future__ import annotations
 
@@ -21,8 +21,13 @@ CLAUDE_MAX_20X_YI = round(47.2 * MONTH_WEEKS / 1.5 * 1.25)
 CLAUDE_WEEKLY_20X_TO_5X = 2
 SUPERGROK_WEEKLY_TOKENS = 127_272_629
 SUPERGROK_PANEL_USD = 25
+CHATGPT_PLUS_LUNA_USED_TOKENS = 112_666_769
+CHATGPT_PLUS_LUNA_USED_FRACTION = 0.06
 KIMI_199_USED_TOKENS = 243_739_068
 KIMI_199_USED_FRACTION = 0.84
+KIMI_MONTHLY_TO_WEEKLY = 5
+KIMI_K27_199_USED_TOKENS = 11_913_113
+KIMI_K27_199_MONTHLY_USED_FRACTION = 0.0076
 
 STANDARD_MIX = CONVENTIONS["standardTokenMix"]
 
@@ -35,8 +40,28 @@ def supergrok_monthly_yi(panel_usd: float, digits: int) -> float:
     return round(SUPERGROK_WEEKLY_TOKENS * MONTH_WEEKS / YI * panel_usd / SUPERGROK_PANEL_USD, digits)
 
 
+def chatgpt_luna_monthly_yi(plan_multiplier: float = 1) -> float:
+    return round(
+        CHATGPT_PLUS_LUNA_USED_TOKENS / CHATGPT_PLUS_LUNA_USED_FRACTION
+        * MONTH_WEEKS * plan_multiplier / YI,
+        2,
+    )
+
+
 def kimi_199_monthly_yi() -> float:
-    return round(KIMI_199_USED_TOKENS / KIMI_199_USED_FRACTION * MONTH_WEEKS / YI, 2)
+    return round(
+        KIMI_199_USED_TOKENS / KIMI_199_USED_FRACTION
+        * KIMI_MONTHLY_TO_WEEKLY / YI,
+        2,
+    )
+
+
+def kimi_k27_199_monthly_yi() -> float:
+    return round(
+        KIMI_K27_199_USED_TOKENS
+        / KIMI_K27_199_MONTHLY_USED_FRACTION / YI,
+        2,
+    )
 
 
 # OpenCode Go 官方给的是共享美元池、每模型月 Usage 和三段价格；按项目统一标准负载折 token。
@@ -217,10 +242,13 @@ def glm_rows() -> list[tuple]:
 
 # ---- 订阅：(plan_id, plan_name, price, currency, served_model, monthly_yi, confidence, source, decision_note)
 SUBS = [
-    # OpenAI —— Sol 为基准；Terra/Luna/5.5 在 DERIVED 按输入、缓存、输出 credits 混合比换算
+    # OpenAI —— Sol 为 Terra/5.5 基准；Luna 改用 Plus 用户面板实测，Pro 档按官方 5x/20x 推算
     ("chatgpt_plus", "ChatGPT Plus", 20, "USD", "gpt-5.6-sol", 6.16, "medium", "awesome-coding-plan 2026-07-30 实测", ""),
     ("chatgpt_pro_5x", "ChatGPT Pro 5x", 100, "USD", "gpt-5.6-sol", 30.8, "medium", "Plus × 官方 5x", "flat.json 写 38.9 与官方 5x 不符，改 30.8"),
     ("chatgpt_pro_20x", "ChatGPT Pro 20x", 200, "USD", "gpt-5.6-sol", 123.2, "high", "Plus × 官方 20x", "用户拍板 123.2；两个独立印证：OpenAI 社区健康周 7.87 亿 = 24% → 131 亿/月；《财经》2026-08 跑满实测 109 亿/月；文章 200 亿作废；第三方旁证：OpenClawFarm 网关 2026-08-21~09-06 对正价 Pro 20x 账号 250 个百分点的 raw token 实测 139.5 亿/月（段间 108~154 亿，实际负载 cache 94.7%，直接给出 total tokens、不再按标准负载归一），见 chatgpt-pro20x-gateway-measurement-2026-09-06.json；逐段复核发现汇总仍含两段Astra，139.5亿仅作混合负载旁证，不视为纯Sol实测；采用值未改"),
+    ("chatgpt_plus", "ChatGPT Plus", 20, "USD", "gpt-5.6-luna", chatgpt_luna_monthly_yi(), "high", "用户Plus面板：112,666,769 total tokens = 周额度约6%；chatgpt-luna-adoption-round6-2026-09-08.json", "旧120.12亿（Sol基准×统一credits价比19.5）→75.11亿：112,666,769÷6%×4周；直接保留面板total，不再套标准负载。6%若为整数四舍五入，范围约69.33~81.94亿/月；实测token构成为cache read 97.06%、普通输入2.61%、输出0.33%"),
+    ("chatgpt_pro_5x", "ChatGPT Pro 5x", 100, "USD", "gpt-5.6-luna", chatgpt_luna_monthly_yi(5), "medium", "Plus Luna实测×官方5x；chatgpt-luna-adoption-round6-2026-09-08.json", "旧600.6亿→375.56亿：Plus Luna面板反推基准×官方5x；非Pro 5x账号独立实测"),
+    ("chatgpt_pro_20x", "ChatGPT Pro 20x", 200, "USD", "gpt-5.6-luna", chatgpt_luna_monthly_yi(20), "medium", "Plus Luna实测×官方20x；GitHub #8社区美元等效旁证；chatgpt-luna-adoption-round6-2026-09-08.json", "旧2402.4亿→1502.22亿：Plus Luna面板反推基准×官方20x；按截图实际token组成折公开API价，约$1073/周，与社区‘Luna x20不到$1200、Sol x20约$2000’同量级。美元等效仅作池比旁证，不直接换token"),
     # Anthropic —— Pro保留Opus4.8历史实测；Max采用9/14永久口径估算157亿，非当期boost或纯Opus5硬上限
     #   5x/20x是5h窗口倍率；用户明确20x周池仅为5x的2倍，旧2.25周池比例不再采用
     ("claude_pro", "Claude Pro", 20, "USD", "claude-opus-4.8", 15.88, "medium", "awesome-coding-plan 实测", "Opus4.8历史实测保留，现服务Opus5未重测；round5候选Opus5约1.9亿依赖假定周消息数，用户未确认，不作为实测收紧证据"),
@@ -240,11 +268,16 @@ SUBS = [
     ("cursor_ultra_fast", "Cursor Ultra (Fast)", 200, "USD", "grok-4.6", CURSOR_ULTRA_FAST_YI, "high", "用户当前平滑账号截图863.8M/28.1%直接反推；cursor-adoption-round8-2026-09-06.json", "旧40亿→30.74亿；取最大样本xhigh-fast行直接反推，百分比取整区间30.69~30.80亿；同图较小high-fast行24.43亿不采。Standard/Fast不强制raw token严格2×，因为面板按费用扣减且token类型构成不同；官方三段费率2×事实不变；与SuperGrok渠道分开"),
     ("cursor_pro", "Cursor Pro", 20, "USD", "grok-4.6", 4.7, "medium", "Cursor 论坛面板：303.9M = 65% → 4.68 亿；另有用户口述 4~5 亿打满", "保留独立面板采用4.7亿，不随Ultra中间值联动；池按compute cost计非raw token"),
     ("cursor_pro_plus", "Cursor Pro+", 60, "USD", "grok-4.6", CURSOR_ULTRA_STANDARD_YI * 800 / 3000, "medium", "round3面板Pro+池约$800；按Ultra池$3000等比；cursor-adoption-round8-2026-09-06.json", "旧21.33亿→20.63亿：77.37×800/3000；继承跨档池规模假设，非独立实测；未采社区图反推$4500~4800作为官方池；促销与账号差异保留"),
-    # Kimi 国内 —— 199 档本机 ccusage 反推，其余按官网倍率 1x/4x/20x/60x
-    ("kimi_allegretto_cn", "Kimi 会员 199", 199, "CNY", "kimi-k3", kimi_199_monthly_yi(), "medium", f"本机ccusage {KIMI_199_USED_TOKENS}/{KIMI_199_USED_FRACTION:.0%}×{MONTH_WEEKS:g}周；kimi199-round5-swe17-2026-09-05.json", "额度11.61亿不变，high→medium：占比为用户约数，样本以k3-256k为主且含kimi-for-coding，非纯K3 1M实测；SWE1.7短时面板的模型/统计窗口不同，未替换基准；ACP14.28为旧模型未采"),
-    ("kimi_moderato_cn", "Kimi 会员 99", 99, "CNY", "kimi-k3", round(kimi_199_monthly_yi() * 4 / 20, 2), "medium", "199档×官方4/20", "继承199档K3-256K为主的混合负载估算，不是K3 1M纯模型实测"),
+    # Kimi 国内 —— 月池是周池的5倍（不是项目通用4周）；199档本机ccusage反推，其余按官网1x/4x/20x/60x
+    ("kimi_allegretto_cn", "Kimi 会员 199", 199, "CNY", "kimi-k3", kimi_199_monthly_yi(), "medium", f"本机ccusage {KIMI_199_USED_TOKENS}/{KIMI_199_USED_FRACTION:.0%}反推周额度×Kimi月池{KIMI_MONTHLY_TO_WEEKLY:g}倍；kimi-adoption-round6-2026-09-08.json", "旧11.61亿→14.51亿：用户确认Kimi月池=周池×5，旧值误套项目通用4周；样本以k3-256k为主且含kimi-for-coding，非纯K3 1M实测；SWE1.7短时面板的模型/统计窗口不同，未替换基准；ACP14.28为旧模型旁证，不直接采用"),
+    ("kimi_moderato_cn", "Kimi 会员 99", 99, "CNY", "kimi-k3", round(kimi_199_monthly_yi() * 4 / 20, 2), "medium", "199档×官方4/20；kimi-adoption-round6-2026-09-08.json", "旧2.32亿→2.90亿：随199档改用周池×5；继承K3-256K为主的混合负载估算，不是K3 1M纯模型实测"),
     ("kimi_andante_cn", "Kimi 会员 49", 49, "CNY", "kimi-k3", round(kimi_199_monthly_yi() / 20, 2), "medium", "199档×官方1/20", ""),
-    ("kimi_allegro_cn", "Kimi 会员 699", 699, "CNY", "kimi-k3", round(kimi_199_monthly_yi() * 60 / 20, 2), "medium", "199档×官方60/20", "继承199档K3-256K为主的混合负载估算，不是K3 1M纯模型实测"),
+    ("kimi_allegro_cn", "Kimi 会员 699", 699, "CNY", "kimi-k3", round(kimi_199_monthly_yi() * 60 / 20, 2), "medium", "199档×官方60/20；kimi-adoption-round6-2026-09-08.json", "旧34.83亿→43.53亿：随199档改用周池×5；继承K3-256K为主的混合负载估算，不是K3 1M纯模型实测"),
+    # K2.7 Standard —— ¥199纯模型面板直接按月百分比反推；其余档按官方Code credits 1x/4x/20x/60x
+    ("kimi_allegretto_cn", "Kimi 会员 199", 199, "CNY", "kimi-k2.7-code", kimi_k27_199_monthly_yi(), "medium", f"V2EX纯K2.7面板 {KIMI_K27_199_USED_TOKENS}/{KIMI_K27_199_MONTHLY_USED_FRACTION:.2%}=15.68亿；kimi-k27-round7-2026-09-08.json；kimi-k27-adoption-round8-2026-09-08.json", "新增K2.7 Standard独立点：采用直接月%反推15.68亿，不与较弱的699档混合样本取中点；可信范围约15.6~16.7亿。单一纯模型账号证据high，但跨账号/时期采用降为medium"),
+    ("kimi_moderato_cn", "Kimi 会员 99", 99, "CNY", "kimi-k2.7-code", round(kimi_k27_199_monthly_yi() * 4 / 20, 2), "medium", "199档×官方4/20；kimi-k27-adoption-round8-2026-09-08.json", "新增3.14亿：继承199档15.68亿与官方Code credits倍率；非独立实测"),
+    ("kimi_andante_cn", "Kimi 会员 49", 49, "CNY", "kimi-k2.7-code", round(kimi_k27_199_monthly_yi() / 20, 2), "medium", "199档×官方1/20；K2.7 Standard所有会员可用；kimi-k27-adoption-round8-2026-09-08.json", "新增0.78亿：继承199档15.68亿与官方Code credits倍率；非独立实测。该档仅排除K3，不排除K2.7 Standard"),
+    ("kimi_allegro_cn", "Kimi 会员 699", 699, "CNY", "kimi-k2.7-code", round(kimi_k27_199_monthly_yi() * 60 / 20, 2), "medium", "199档×官方60/20；kimi-k27-adoption-round8-2026-09-08.json", "新增47.04亿：继承199档15.68亿与官方Code credits倍率；独立699档K2.7占主导混合大样本缩回199档约16.74亿，仅作范围旁证"),
     # Kimi 海外 —— 不画：官方 Code credits 倍率 1×/5×/15×/30× 与国内 1/4/20/60× 体系不同，且无绝对 token 证据
     # 智谱 —— 官方周积分与三段积分系数按项目统一标准负载换算；忙时与闲时分开按月展示。
     *glm_rows(),
@@ -273,13 +306,12 @@ RATIO_COMPOSER = blended(0.5, 2, 6) / blended(0.2, 0.5, 2.5)   # Grok 4.6 → Co
 RATIO_COMPOSER_FAST = blended(0.5, 2, 6) / blended(0.5, 3, 15)
 RATIO_SONNET = round(blended(0.5, 5, 25) / blended(0.2, 2, 10), 2)       # Opus → Sonnet 5 = 2.5
 DERIVED = [
-    # OpenAI：三段 credits 按项目统一标准负载加权，不再用输入列比例代替全口径
+    # OpenAI：Terra/5.5仍按三段credits与项目统一标准负载从Sol换算；Luna已有独立实测，不再从Sol派生
     *[(pid, "gpt-5.6-sol", model, blended(10, 100, 500) / blended(*rates), "medium",
        f"https://learn.chatgpt.com/docs/pricing 三段credits（cache/input/output）Sol=10/100/500，对比{rates}；旧倍率{old_ratio}、旧月额度{sol_yi * old_ratio:g}亿作废；保留Sol基准，按项目统一标准负载重算；见audit-round4-2026-09-05.json",
        pid != "chatgpt_pro_5x" and model != "gpt-5.6-terra")
       for pid, sol_yi in (("chatgpt_plus", 6.16), ("chatgpt_pro_5x", 30.8), ("chatgpt_pro_20x", 123.2))
       for model, rates, old_ratio in (("gpt-5.6-terra", (5, 50, 300), 2),
-                                      ("gpt-5.6-luna", (0.5, 5, 30), 20),
                                       ("gpt-5.5", (12.5, 125, 750), 0.8))],
     # Anthropic：Sonnet 5 标价 = Opus 的 0.4 → ×2.5；Opus 4.8 与 Opus 5 同价 → ×1；Fable 订阅内权重 6.5×(20x) / 4.25×(5x)，且最多占周额度 50%
     ("claude_pro", "claude-opus-4.8", "claude-sonnet-5", RATIO_SONNET, "medium", "标价比 Opus/Sonnet 2.5×", True),
@@ -329,7 +361,7 @@ def is_main(pid: str, model: str) -> bool:
 
 
 EXCLUDED_SUBSCRIPTIONS = {
-    ("kimi_andante_cn", "kimi-k3"): "旧0.58亿为199档×1/20推算，2026-09-05用户确认‘就是不能调用，移除’；官方https://www.kimi.com/code/docs/kimi-code/models限定Moderato及以上可调用K3；不虚构K2.7替代额度"
+    ("kimi_andante_cn", "kimi-k3"): "旧0.58亿为199档按4周×1/20推算；即使按Kimi周池×5修正为0.73亿，也因2026-09-05用户确认‘就是不能调用’而继续排除；官方https://www.kimi.com/code/docs/kimi-code/models限定Moderato及以上可调用K3；同档可用的K2.7 Standard已作为独立点纳入"
 }
 
 FIELDS = ["plan_id", "plan_name", "billing", "price", "currency", "price_usd", "served_model",

@@ -15,10 +15,10 @@ BOARDS = {
     "aa_intelligence_index": ("AA智力榜", "Artificial Analysis"),
     "aa_coding_agent_index": ("AA编程Agent榜", "AA Coding Agent"),
 }
-COLORS = {"OpenAI": "#19B37A", "Claude": "#FF8A3D", "xAI": "#8E6CF7",
-          "Cursor": "#FFC233", "Kimi": "#2FA8FF", "GLM": "#1E1E1E",
-          "MiniMax": "#FF5FA2", "Alibaba": "#FF4D4F", "OpenCode": "#00BCD4",
-          "Command Code": "#D81BCC", "Ollama": "#00A86B", "DeepSeek": "#2F5BFF",
+COLORS = {"OpenAI": "#00A86B", "Claude": "#F07826", "xAI": "#B65CFF",
+          "Cursor": "#FFB81C", "Kimi": "#2FA8FF", "GLM": "#1E1E1E",
+          "MiniMax": "#D23A7D", "Alibaba": "#FF6F61", "OpenCode": "#00C0A8",
+          "Command Code": "#708090", "Ollama": "#A0785C", "DeepSeek": "#1F75FE",
           "Google": "#7CC12A", "Xiaomi": "#FFA000", "Tencent": "#26C6DA"}
 PREFIXES = [("chatgpt", "OpenAI"), ("openai", "OpenAI"), ("claude", "Claude"),
             ("anthropic", "Claude"),
@@ -63,6 +63,8 @@ def text(x, y, content, size=14, fill="#222522", anchor="start", weight=400, ext
 
 
 def plan_name(plan, language):
+    if plan.startswith("GLM "):
+        plan = plan.replace("老客", "v2").replace("新客", "v3")
     plan = plan.replace("Claude ", "").replace("ChatGPT ", "").replace("GLM Coding ", "GLM ")
     if language == "en":
         return (plan.replace(" (9/14+)", " · from Sep 14")
@@ -90,6 +92,8 @@ def label_lines(p, language, board=None):
         plans = ["Max 5x / 20x · " + ("from Sep 14" if language == "en" else "9/14+")]
     models = list(dict.fromkeys(q["model_display"] for q in p["members"]))
     name = " / ".join(models)
+    if board and any(q.get(board + "__score_is_estimated") for q in p["members"]):
+        name += " [AA estimate]" if language == "en" else " [AA估计]"
     if board:
         effort = p.get(board + "__reasoning_effort")
         harness = p.get(board + "__agent_harness")
@@ -106,10 +110,16 @@ def label_position(p, board, x, y):
     if model == "claude-opus-5":
         return x - 24, y - 49, "end"
     if model == "claude-opus-4.8":
-        return (x + 24, y + 43, "start") if board == "aa_intelligence_index" else (x - 24, y + 13, "end")
+        if board == "aa_intelligence_index":
+            return x + 24, y + 43, "start"
+        if board == "aa_coding_agent_index":
+            return x - 24, y + 47, "end"
+        return x - 24, y + 13, "end"
     if model == "claude-sonnet-5":
         return x + 22, y - 54, "start"
     if model == "glm-5.3":
+        if board == "aa_intelligence_index":
+            return x + 24, y - 72, "start"
         return x + 24, y - (58 if board == "arena_code" else 31), "start"
     if model == "glm-5.3-flash":
         return x + 23, y - 40, "start"
@@ -118,6 +128,8 @@ def label_position(p, board, x, y):
     if model == "gpt-5.6-luna":
         return x + 5, y + 57, "end"
     if model == "gpt-5.6-terra":
+        if board == "aa_intelligence_index":
+            return x - 24, y + 65, "end"
         return x + 24, y - 55, "start"
     return x - 20, y - 52, "end"
 
@@ -158,7 +170,7 @@ def draw(board, meta, points, tier, language="zh"):
          text(384, 143, frontier_caption, 16, "#858B81", weight=300),
          text(1388, 76, BOARDS[board][1], 31, "#343A33", "end", extra='class="serif"'),
          text(1388, 107, snapshot_caption + meta["snapshot"], 12, "#737771", "end"),
-         text(1388, 136, meta["metric"], 12, "#737771", "end"),
+         text(1388, 136, meta["metric"] + (" " + meta["name"].rsplit(" ", 1)[1] if " v" in meta["name"] else ""), 12, "#737771", "end"),
          '<rect x="40" y="184" width="1360" height="612" rx="20" fill="#FFFFFF"/>']
 
     ticks = [.001, .002, .005, .01, .02, .05, .1, .2, .5, 1, 2, 5, 10]
@@ -196,9 +208,9 @@ def draw(board, meta, points, tier, language="zh"):
             s += [f'<rect x="-11" y="-11" width="22" height="22" rx="6" fill="#FFF" stroke="{c}" stroke-width="1.35"/>',
                   f'<circle r="4" fill="{c}"/>']
         elif p["billing"] == "metered":
-            s.append(f'<path d="M0 -5.5L5.5 0 0 5.5 -5.5 0Z" fill="white" stroke="{c}" stroke-width="1.5" opacity=".44"/>')
+            s.append(f'<path d="M0 -5.5L5.5 0 0 5.5 -5.5 0Z" fill="white" stroke="{c}" stroke-width="1.5" opacity=".68"/>')
         else:
-            s.append(f'<rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="{c}" opacity=".48"/>')
+            s.append(f'<rect x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="{c}" opacity=".68"/>')
         s.append('</g>')
     for p in reversed(frontier):
         x, y = sx(p["real_usd_per_mtok"]), sy(p[key])
@@ -225,7 +237,7 @@ def draw(board, meta, points, tier, language="zh"):
     s += [f'<path d="M{xx + 9} 830h22" stroke="#303630" stroke-width="1.65"/>', text(xx + 39, 834, "Pareto frontier" if language == "en" else "帕累托前沿", 12, "#687168"),
           f'<path d="M{api_mark_x} 825l5 5-5 5-5-5Z" fill="none" stroke="#8B958D" stroke-width="1.2"/>',
           text(api_mark_x + 14, 834, "Metered API" if language == "en" else "按量 API", 12, "#687168"),
-          text(56, 874, "Month = 4 weeks · Dollar/credit: 97.5% cache / 2.15% input / 0.35% output · Direct totals unchanged" if language == "en" else "月=4周 · 美元/credits换算：缓存97.5% / 输入2.15% / 输出0.35% · 直接total实测不重算", 12, "#727B72"),
+          text(56, 874, "Default month = 4 weeks; Kimi pool = 5× weekly · Dollar/credit: 97.5% cache / 2.15% input / 0.35% output · Direct totals unchanged" if language == "en" else "默认月=4周；Kimi月池=周池×5 · 美元/credits换算：缓存97.5% / 输入2.15% / 输出0.35% · 直接total实测不重算", 12, "#727B72"),
           text(1384, 874, (f"{len(subs)} subscription positions / {len(api)} API positions / {len(frontier)} frontier positions" if language == "en" else f"{len(subs)} 个订阅位置 / {len(api)} 个 API 位置 / {len(frontier)} 个前沿位置"), 12, "#727B72", "end"),
           text(56, 898, ((
               "Highest archived configuration reference; harness and effort shown. Product/quota alignment unverified, not channel measurements."

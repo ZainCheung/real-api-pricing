@@ -20,12 +20,22 @@ for p in ROOT.joinpath('data').rglob('*.json'):
     json.loads(p.read_text(encoding='utf-8-sig'))
 
 exported = list(exports())
-assert len(exported) == 81
+assert len(exported) == 99
 assert len({d for _,d in exported}) == len(exported)
 for source,destination in exported:
     assert destination.is_file(), destination
     assert hashlib.sha256(source.read_bytes()).digest() == hashlib.sha256(destination.read_bytes()).digest(), destination
 assert set(ROOT.joinpath('charts').rglob('*.svg')) == {d for _,d in exported if d.suffix == '.svg'}
+
+# Frontier exports must preserve benchmark configuration identity.
+frontier = json.loads((ROOT / '_build' / '前沿筛选结果.json').read_text(encoding='utf-8'))
+for board in frontier['boards'].values():
+    for row in board['frontier']:
+        for field in ('agent_harness', 'reasoning_effort', 'mapping_kind',
+                      'mapping_confidence', 'mapping_note'):
+            assert field in row
+for table in ROOT.joinpath('_build').glob('前沿*.txt'):
+    assert any('Harness' in line for line in table.read_text(encoding='utf-8').splitlines()), table
 for doc in [ROOT/'README.md',ROOT/'README.zh.md',ROOT/'BUILD.md',ROOT/'SOURCES.md',ROOT/'charts/README.md']:
     for target in re.findall(r'\]\(([^)]+)\)', doc.read_text(encoding='utf-8')):
         if not target.startswith(('http:', 'https:', '#')):
@@ -33,9 +43,9 @@ for doc in [ROOT/'README.md',ROOT/'README.zh.md',ROOT/'BUILD.md',ROOT/'SOURCES.m
 for doc,lang in [('README.md','en'),('README.zh.md','zh')]:
     s=(ROOT/doc).read_text(encoding='utf-8')
     pictures=re.findall(r'!\[[^\]]*\]\(([^)]+)\)',s)
-    assert len(pictures)==6 and all(p.startswith(f'charts/{lang}/') for p in pictures)
-    assert s.count('[English SVG]')==6 and s.count('[中文 SVG]')==6
-    assert s.count('[English PNG]')==6 and s.count('[中文 PNG]')==6
+    assert len(pictures)==8 and all(p.startswith(f'charts/{lang}/') for p in pictures)
+    assert s.count('[English SVG]')==8 and s.count('[中文 SVG]')==8
+    assert s.count('[English PNG]')==8 and s.count('[中文 PNG]')==8
 print(f'PASS: {len(adopted)} adopted rows, {len(exported)} exported files match build hashes, all JSON and bilingual links valid')
 for board in data['boards']:
     missing=sorted({p['model'] for p in data['points'] if p[board+'__score'] is None})
